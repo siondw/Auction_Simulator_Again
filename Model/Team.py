@@ -23,52 +23,48 @@ class Team:
             'BN6': None
         }
 
-    def add_player(self, player, cost):
-        position = player.get_position()
-        slot = self.find_next_available_slot(position)
-
+    # This method adds a player to the team in is specified slot, which is calculated
+    # in the strategy class
+    def add_player(self, player, cost, slot):
         if slot and (cost <= self.max_bid):
             self.roster[slot] = player
             player.mark_as_drafted()
             self.budget -= cost
             self.set_max_bid()
         else:
-            raise Exception(f"No available slot for player in position {position}")
-
-    def find_next_available_slot(self, position):
-        # Define the order of slots for each position
-        slot_order = {
-            'QB': ['QB1', 'QB2', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
-            'RB': ['RB1', 'RB2', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
-            'WR': ['WR1', 'WR2', 'WR3', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
-            'TE': ['TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
-        }
-
-        for slot in slot_order[position]:
-            if not self.roster[slot]:
-                return slot
-        return None
+            raise Exception(f"No available slot for player in slot {slot}")
 
     def get_qbs(self):
-        return self.roster['QB']
+        return [player for slot, player in self.roster.items() if slot.startswith('QB')
+                and player is not None]
 
     def get_rbs(self):
-        return self.roster['RB']
+        return [player for slot, player in self.roster.items() if slot.startswith('RB')
+                and player is not None]
 
     def get_wrs(self):
-        return self.roster['WR']
+        return [player for slot, player in self.roster.items() if slot.startswith('WR')
+                and player is not None]
 
     def get_tes(self):
-        return self.roster['TE']
+        return [player for slot, player in self.roster.items() if slot.startswith('TE')
+                and player is not None]
 
     def get_flex(self):
-        return self.roster['Flex']
+        return [player for slot, player in self.roster.items() if slot.startswith('Flex')
+                and player is not None]
 
     def get_bench(self):
-        return self.roster['BN']
+        return [player for slot, player in self.roster.items() if slot.startswith('BN')
+                and player is not None]
 
     def get_all_players(self):
-        all_players = self.get_qbs() + self.get_rbs() + self.get_wrs() + self.get_tes() + self.get_flex() + self.get_bench()
+        all_players = self.get_qbs()\
+                      + self.get_rbs()\
+                      + self.get_wrs()\
+                      + self.get_tes()\
+                      + self.get_flex() \
+                      + self.get_bench()
         return all_players
 
     def get_budget(self):
@@ -85,5 +81,4 @@ class Team:
 
     def set_max_bid(self):
         positions_left = (sum(1 for slot, player in self.roster.items() if player is None)) - 1
-        return self.budget - positions_left
-
+        self.max_bid = self.budget - positions_left

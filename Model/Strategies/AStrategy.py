@@ -5,7 +5,8 @@ import random
 
 class Strategy(ABC):
 
-    def __init__(self):
+    def __init__(self, team_budget):
+        self.team_budget = team_budget
         self.budget_allocation = {
             'QB1': 0,
             'QB2': 0,
@@ -24,23 +25,74 @@ class Strategy(ABC):
             'BN6': 0
         }
 
+    @abstractmethod
     def calculate_bid(self, team, player, current_bid, roster):
         # Determine the appropriate slot for the player
         slot = self.determine_slot(roster, player.get_position())
 
+        # If there's no available slot, do not place a bid
+        if slot is None:
+            return None
+
         # Get the maximum budget for the slot
-        max_bid = self.budget_allocation[slot] * team.budget
+        max_bid = self.budget_allocation[slot] * team.get_budget()
 
         # Calculate the probability of placing a bid
         probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid))
 
+        # add in strategy bias
+        bias_bid = self.bias(player, probability_of_bidding)
+
         # Decide whether to place a bid
-        if random.random() <= probability_of_bidding:
+        if random.random() <= bias_bid:
             # Bid slightly higher than the current bid
             return current_bid + 1
         else:
             return None  # Not willing to bid
 
+    def determine_slot(self, roster, player):
+
+        # Retrieve the player's position and value
+        position = player.get_position()
+        player_value = player.get_value()
+
+        # Define the order of slots for each position
+        slot_order = {
+            'QB': ['QB1', 'QB2', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
+            'RB': ['RB1', 'RB2', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
+            'WR': ['WR1', 'WR2', 'WR3', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
+            'TE': ['TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
+        }
+
+        # Set a 20% tolerance on the expected value
+        tolerance = 0.2  # 20% tolerance
+
+        # Iterate through the slots in order for the player's position
+        for slot in slot_order[position]:
+            if slot.startswith('BN'):
+                ev = self.budget_allocation['Bench'] * self.team_budget / 6  # divide by the number of bench slots
+            else:
+                # Calculate the expected value for the slot based on the budget allocation
+                ev = self.budget_allocation[slot] * self.team_budget
+
+            # Check if the slot is empty and the player's value is within the tolerance of the expected value
+            if not roster[slot] and (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):
+                # If so, return the slot
+                return slot
+
+        # If no suitable slot was found in the first pass, find the first empty slot regardless of value
+        for slot in slot_order[position]:
+            if not roster[slot]:
+                return slot
+
+        # If no empty slot is found, return None
+        return None
+
     @abstractmethod
-    def determine_slot(self, roster, position):
+    def bias(self, player, bid_probability):
+        """
+        Adjusts the current bid based on some bias. The bias can depend on the player, the current bid,
+        the state of the auction, or anything else relevant.
+        This method should be implemented in each subclass.
+        """
         pass

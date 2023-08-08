@@ -8,6 +8,9 @@ class Player:
         self.positional_rank = positional_rank
         self.drafted = False
 
+    def __str__(self):
+        return f"{self.name} ({self.pos}, {self.nfl_team})"
+
     def get_name(self):
         return self.name
 
@@ -31,3 +34,4 @@ class Player:
 
     def get_positional_rank(self):
         return self.positional_rank
+
