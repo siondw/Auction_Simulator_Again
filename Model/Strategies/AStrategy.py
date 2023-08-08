@@ -41,7 +41,7 @@ class Strategy(ABC):
         probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid))
 
         # add in strategy bias
-        bias_bid = self.bias(player, probability_of_bidding)
+        bias_bid = self.bias(player, probability_of_bidding, current_bid)
 
         # Decide whether to place a bid
         if random.random() <= bias_bid:
@@ -89,7 +89,7 @@ class Strategy(ABC):
         return None
 
     @abstractmethod
-    def bias(self, player, bid_probability):
+    def bias(self, player, bid_probability, current_bid):
         """
         Adjusts the current bid based on some bias. The bias can depend on the player, the current bid,
         the state of the auction, or anything else relevant.

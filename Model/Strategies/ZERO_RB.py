@@ -19,4 +19,19 @@ class ZeroRBStrategy(Strategy, ABC):
             'Bench': 0.06,  # 6% for all bench slots
         }
 
+    # Zero-RB bias chases low ranked running-backs
+    def bias(self, player, bid_probability, current_bid):
+        pos = player.get_position()
+        rank = player.get_positional_rank()
+
+        if pos == 'RB' and rank > 20:
+            # Increase the bid probability by 5%
+            bid_probability *= 1.05
+
+            # Ensure the bid probability does not exceed 1
+            bid_probability = min(bid_probability, 1)
+
+        return bid_probability
+
+
 
