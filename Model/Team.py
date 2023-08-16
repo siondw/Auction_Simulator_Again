@@ -82,3 +82,8 @@ class Team:
     def set_max_bid(self):
         positions_left = (sum(1 for slot, player in self.roster.items() if player is None)) - 1
         self.max_bid = self.budget - positions_left
+
+    # gets any player in a given slot
+    def get_player_by_slot(self, slot):
+        return self.roster.get(slot, None)
+

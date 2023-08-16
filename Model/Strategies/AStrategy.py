@@ -8,21 +8,16 @@ class Strategy(ABC):
     def __init__(self, team_budget):
         self.team_budget = team_budget
         self.budget_allocation = {
-            'QB1': 0,
-            'QB2': 0,
-            'RB1': 0,
-            'RB2': 0,
-            'WR1': 0,
-            'WR2': 0,
-            'WR3': 0,
-            'TE1': 0,
-            'Flex': 0,
-            'BN1': 0,
-            'BN2': 0,
-            'BN3': 0,
-            'BN4': 0,
-            'BN5': 0,
-            'BN6': 0
+            'QB1': 0 * 200,
+            'QB2': 0 * 200,
+            'RB1': 0 * 200,
+            'RB2': 0 * 200,
+            'WR1': 0 * 200,
+            'WR2': 0 * 200,
+            'WR3': 0 * 200,
+            'TE1': 0 * 200,
+            'Flex': 0 * 200,
+            'Bench': 0 * 200
         }
 
     @abstractmethod
@@ -35,16 +30,17 @@ class Strategy(ABC):
             return None
 
         # Get the maximum budget for the slot
-        max_bid = self.budget_allocation[slot] * team.get_budget()
+        max_bid_for_slot = self.budget_allocation[slot]
+        max_bid_allowed = team.get_max_bid()
 
         # Calculate the probability of placing a bid
-        probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid))
+        probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid_for_slot))
 
         # add in strategy bias
-        bias_bid = self.bias(player, probability_of_bidding, current_bid)
+        bias_bid = self.bias(player, probability_of_bidding, current_bid, team)
 
         # Decide whether to place a bid
-        if random.random() <= bias_bid:
+        if random.random() <= bias_bid and current_bid + 1 < max_bid_allowed:
             # Bid slightly higher than the current bid
             return current_bid + 1
         else:
@@ -89,7 +85,7 @@ class Strategy(ABC):
         return None
 
     @abstractmethod
-    def bias(self, player, bid_probability, current_bid):
+    def bias(self, player, bid_probability, current_bid, team):
         """
         Adjusts the current bid based on some bias. The bias can depend on the player, the current bid,
         the state of the auction, or anything else relevant.
