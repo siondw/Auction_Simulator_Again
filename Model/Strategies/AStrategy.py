@@ -21,7 +21,8 @@ class Strategy(ABC):
         }
 
     @abstractmethod
-    def calculate_bid(self, team, player, current_bid, roster):
+    def calculate_bid(self, team, player, current_bid):
+        roster = team.roster
         # Determine the appropriate slot for the player
         slot = self.determine_slot(roster, player.get_position())
 
@@ -42,7 +43,10 @@ class Strategy(ABC):
         # Decide whether to place a bid
         if random.random() <= bias_bid and current_bid + 1 < max_bid_allowed:
             # Bid slightly higher than the current bid
-            return current_bid + 1
+            if current_bid < (player.get_value() / 2):
+                return player.get_value() / 2
+            else:
+                return current_bid + 1
         else:
             return None  # Not willing to bid
 

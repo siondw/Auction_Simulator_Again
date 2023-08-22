@@ -87,3 +87,8 @@ class Team:
     def get_player_by_slot(self, slot):
         return self.roster.get(slot, None)
 
+    def calculate_bid(self, player, current_bid):
+        return self.strategy.calculate_bid(self, player, current_bid)
+
+    def determine_slot(self, player):
+        return  self.strategy.determine_slot(self.roster, player)
