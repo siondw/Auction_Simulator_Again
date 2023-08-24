@@ -1,0 +1,108 @@
+body {
+    background-color: #f0f8f0; /* Soft green background */
+    font-family: Arial, sans-serif;
+    color: #333333; /* Dark text color */
+}
+
+#header {
+    background-color: #4CAF50; /* Green background */
+    padding: 10px;
+    text-align: center;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+#header button {
+    background-color: #6fbf73; /* Different shade of green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+#header .restart-button {
+    background-color: #ffaa5c; /* Orange color for restart */
+}
+
+#header .sim-button {
+    background-color: #5caaff; /* Blue color for sim to end */
+}
+
+#current-auction {
+    background-color: #4CAF50; /* Green background */
+    padding: 15px;
+    text-align: center;
+    color: white;
+}
+
+#current-auction button {
+    background-color: #45a049;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px; /* Rounded button */
+}
+
+#main-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.section {
+    width: 25%; /* Each section takes up 1/4 of the content width */
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+#previous-auctions,
+#team-panel {
+    background-color: #e0f4e0; /* Light green background */
+}
+
+#player-list {
+    width: 50%; /* Middle section takes up 2/4 of the content width */
+}
+
+#player-list table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #4CAF50;
+}
+
+#player-list th,
+#player-list td {
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #4CAF50;
+}
+
+#player-list th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#team-selector {
+    width: 100%;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+button:hover {
+    box-shadow: 0 0 10px #ffffff; /* White glow effect */
+    transform: scale(1.05); /* Slightly enlarges the button */
+}
+
+#header button:hover {
+    box-shadow: 0 0 10px #ffffff; /* White glow effect for header buttons */
+}
+
+/* Add more styling as needed */

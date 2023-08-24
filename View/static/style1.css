@@ -1,0 +1,28 @@
+body {
+    background-color: #f0f0f0; /* Soft background color */
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+h1 {
+    color: #333333; /* Dark text color for the title */
+    margin-top: 100px; /* Space from the top of the page */
+}
+
+.button {
+    background-color: #4CAF50; /* Green background */
+    border: none;
+    color: white; /* White text */
+    padding: 15px 32px; /* Size of the button */
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 40px auto; /* Center the button and add space above/below */
+    cursor: pointer;
+    border-radius: 25px; /* Rounded corners */
+}
+
+.button:hover {
+    background-color: #45a049; /* Slightly darker green on hover */
+}

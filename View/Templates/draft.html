@@ -1,0 +1,64 @@
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style2.css') }}">
+    <title>Draft Screen</title>
+</head>
+<body>
+    <div id="header">
+        <button class="restart-button">Restart Draft</button>
+        <h1>Fantasy Football Auction Draft Simulator</h1>
+        <button class="sim-button">Sim to End of Draft</button>
+    </div>
+
+    <!-- Top Section for Current Auction -->
+    <div id="current-auction">
+        <h2>Current Player Up for Auction: <span id="current-player-name">Player Name</span></h2>
+        <button id="place-bid">Place Bid</button>
+    </div>
+
+
+    <!-- Main Content Section -->
+    <div id="main-content">
+
+        <!-- Left Section for Previous Auction Results -->
+        <div id="previous-auctions" class="section">
+            <h3>Previous Auction Results</h3>
+            <ul id="auction-results">
+                <!-- List of Previous Auction Results -->
+            </ul>
+        </div>
+
+        <!-- Middle Section for Player List -->
+        <div id="player-list" class="section">
+            <h3>Available Players</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Projected Points</th>
+                        <th>Positional Rank</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- List of Available Players -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Right Section for Team Panel -->
+        <div id="team-panel" class="section">
+            <h3>Team Roster</h3>
+            <select id="team-selector">
+                <!-- Dropdown for Team Selection -->
+            </select>
+            <div id="team-roster">
+                <!-- Display Selected Team Roster -->
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Scripts or Additional Content -->
+
+</body>
+</html>
