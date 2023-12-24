@@ -20,7 +20,6 @@ class Strategy(ABC):
             'Bench': 0 * 200
         }
 
-    @abstractmethod
     def calculate_bid(self, team, player, current_bid):
         roster = team.roster
         # Determine the appropriate slot for the player

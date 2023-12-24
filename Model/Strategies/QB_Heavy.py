@@ -3,7 +3,7 @@ from abc import ABC
 from Model.Strategies.AStrategy import Strategy
 
 
-class QBHeavyStrategy(Strategy, ABC, ABC):
+class QBHeavyStrategy(Strategy, ABC):
     def __init__(self, team_budget):
         super().__init__(team_budget)
         self.budget_allocation = {

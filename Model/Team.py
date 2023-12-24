@@ -1,3 +1,6 @@
+from Model.Strategies.HUMAN import HumanStrategy
+
+
 class Team:
 
     def __init__(self, name, strategy=None):
@@ -92,3 +95,7 @@ class Team:
 
     def determine_slot(self, player):
         return  self.strategy.determine_slot(self.roster, player)
+
+    def is_human_strategy(self):
+        return isinstance(self.strategy, HumanStrategy)
+

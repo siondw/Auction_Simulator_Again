@@ -19,7 +19,9 @@ class RoundOfAuction:
             # Loop through each team and ask them to calculate their bid
             for team in self.teams:
                 if team != self.highest_bidder:  # Skip the nominating team
-                    bid = team.strategy.calculate_bid(team, self.player_nominated, self.current_bid, team.roster)
+                    if team.is_human_strategy():
+
+                        bid = team.strategy.calculate_bid(team, self.player_nominated, self.current_bid)
                     if bid is not None and bid > self.current_bid:
                         self.process_bid(team, bid)
                         new_bid_made = True  # A new bid was made, so continue the loop

@@ -3,7 +3,7 @@ import pandas as pd
 from Model.Player import Player
 
 
-class PlayerDataAccess:
+class PlayerImporter:
     @staticmethod
     def import_players_from_csv(file_path):
         data = pd.read_csv(file_path)
