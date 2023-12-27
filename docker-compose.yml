@@ -1,0 +1,34 @@
+version: "3.9"
+
+# We are setting up 2 services: 
+# - web container for the Flask application 
+# - appsmith container for appsmith
+services:
+  ##################################################################
+  # Configure the webserver container
+  web:
+    # Set up the web server according to the Dockerfile inside the flask-app/ folder
+    build: flask_app/
+    container_name: web
+    # Connect the src folder on the host machine to the code folder in the container. 
+    # Note that the code folder in container is the working directory (see DockerFile).
+    volumes:
+      - './flask_app:/code'
+    # Have the container restart if it fails for some reason. 
+    restart: unless-stopped
+    # Map host port 8001 to container port 4000 (see the 
+    # EXPOSE command in Dockerfile)
+    ports:
+      - "8001:4000"
+
+  ##################################################################
+  # Configure the AppSmith container (borrowed directly from Appsmith)
+  appsmith:
+    image: index.docker.io/appsmith/appsmith-ce
+    container_name: appsmith
+    ports:
+      - "8080:80"
+      - "4443:443"
+    volumes:
+      - ./stacks:/appsmith-stacks
+    restart: unless-stopped

@@ -98,4 +98,7 @@ class Team:
 
     def is_human_strategy(self):
         return isinstance(self.strategy, HumanStrategy)
+    
+    def get_name(self):
+        return self.name
 

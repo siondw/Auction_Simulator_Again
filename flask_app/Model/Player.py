@@ -8,6 +8,17 @@ class Player:
         self.positional_rank = positional_rank
         self.drafted = False
 
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'pos': self.pos,
+            'nfl_team': self.nfl_team,
+            'projected_points': float(self.projected_points),
+            'estimated_value': int(self.estimated_value),
+            'positional_rank': int(self.positional_rank),
+            'drafted': self.drafted
+        }
+
     def __str__(self):
         return f"{self.name} ({self.pos}, {self.nfl_team})"
 

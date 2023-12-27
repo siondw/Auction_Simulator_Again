@@ -1,6 +1,6 @@
 import unittest
 
-from Model.Player import Player
+from flask_app.Model.Player import Player
 
 
 class TestPlayer(unittest.TestCase):

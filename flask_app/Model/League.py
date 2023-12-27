@@ -48,7 +48,7 @@ class League:
         self.set_nomination_order()
 
     def import_players(self):
-        self.players = PlayerImporter.import_players_from_csv(r"C:\Users\Ccdwe\PycharmProjects\pythonProject1\Resources\Players.csv")
+        self.players = PlayerImporter.import_players_from_csv("Resources/Players.csv")
 
     def conduct_auction_round(self, player_nominated, highest_bidder_team):
         round_of_auction = RoundOfAuction(self.teams, player_nominated, highest_bidder_team)
@@ -62,9 +62,9 @@ class League:
         return None
 
     def set_nomination_order(self):
-        # Shuffle the teams to create a random nomination order
-        self.nomination_order = self.teams.copy()
-        random.shuffle(self.nomination_order)
+        self.nomination_order = random.shuffle(self.teams)
+        
+        
 
     # def nominate_player(self, team):
         # if team.name == "Team 1":  # Human team
@@ -87,3 +87,12 @@ class League:
 
     def get_all_players(self):
         return self.players
+    
+    def get_team_names(self):
+        team_names = []
+
+        for team in self.teams:
+            name = team.get_name()
+            team_names.append(name)
+
+        return team_names
