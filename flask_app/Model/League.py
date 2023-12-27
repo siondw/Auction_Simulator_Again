@@ -50,10 +50,23 @@ class League:
     def import_players(self):
         self.players = PlayerImporter.import_players_from_csv("Resources/Players.csv")
 
-    def conduct_auction_round(self, player_nominated, highest_bidder_team):
-        round_of_auction = RoundOfAuction(self.teams, player_nominated, highest_bidder_team)
+    def conduct_auction_round(self, player_nominated):
+        # Set the nominating team as the first team in the order
+        nominating_team = self.teams[0]
+
+        # Get Player from Player Nominate method
+        player_nominated = self.nominate_player(nominating_team)
+
+        # Conduct the auction round with the nominating team as the highest bidder initially
+        round_of_auction = RoundOfAuction(self.teams, player_nominated, nominating_team)
         round_of_auction.start_bidding()
+        
+        # Add the round summary to the list of summaries
         self.round_summaries.append(round_of_auction.summarize_round())
+
+        # Move the nominating team to the end of the list
+        self.teams.append(self.teams.pop(0))
+
 
     def get_team_roster(self, team_name):
         for team in self.teams:
@@ -66,24 +79,25 @@ class League:
         
         
 
-    # def nominate_player(self, team):
-        # if team.name == "Team 1":  # Human team
-        #     # Logic to ask the user to select a player to nominate
-        #     # You may want to integrate with the view to display the options
-        #     player_nominated = get_user_selected_player()
-        # else:
-        #     # Filter out drafted players
-        #     available_players = [player for player in self.players if not player.drafted]
-        #
-        #     # Consider top 15 players at each position among the available players
-        #     top_players = sorted(available_players, key=lambda x: x.positional_rank)[:15]
-        #
-        #     # Randomly select a player from the list of available players
-        #     # with a bias toward the top 15 at each position
-        #     player_nominated = random.choices(top_players + available_players,
-        #                                       weights=[0.6] * 15 + [0.4] * (len(available_players) - 15), k=1)[0]
-        #
-        # return player_nominated
+    def nominate_player(self, team):
+        if team.name == "Team 1":  # Human team
+            # Logic to ask the user to select a player to nominate
+            # You may want to integrate with the view to display the options
+            # player_nominated = get_user_selected_player()
+            pass
+        else:
+            # Filter out drafted players
+            available_players = [player for player in self.players if not player.drafted]
+        
+            # Consider top 15 players at each position among the available players
+            top_players = sorted(available_players, key=lambda x: x.positional_rank)[:15]
+        
+            # Randomly select a player from the list of available players
+            # with a bias toward the top 15 at each position
+            player_nominated = random.choices(top_players + available_players,
+                                              weights=[0.6] * 15 + [0.4] * (len(available_players) - 15), k=1)[0]
+        
+        return player_nominated
 
     def get_all_players(self):
         return self.players

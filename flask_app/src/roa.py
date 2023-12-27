@@ -3,3 +3,4 @@ from Model.League import League, RoundOfAuction
 import json
 
 roa = Blueprint('roa', __name__)
+

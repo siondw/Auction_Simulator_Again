@@ -10,21 +10,23 @@ class RoundOfAuction:
 
         new_bid_made = True
         while new_bid_made:
-            new_bid_made = False
-            self.notify_observers()
+            new_bid_made = False  # Reset the flag for the new round of bidding
 
+            self.notify_observers()  # Notify teams of the current bid
+
+            # Collect and process bids
             for team in self.teams:
                 if team != self.highest_bidder:
-                    bid = team.update_bid(self.current_bid)  # Observer update method
+                    bid = team.calculate_bid(self.player_nominated, self.current_bid)
                     if bid is not None and bid > self.current_bid:
                         self.process_bid(team, bid)
-                        new_bid_made = True
+                        new_bid_made = True  # A new bid was made, continue the loop
 
         self.finalize_round()
 
     def notify_observers(self):
         for team in self.teams:
-            team.update_bid(self.current_bid)  # Notify each team of the current bid
+            team.notify_of_current_bid(self.current_bid)  # Notify each team of the current bi
 
     def process_bid(self, team, bid_amount):
         self.current_bid = bid_amount

@@ -6,11 +6,25 @@
 # that lives in src/__init__.py
 from src import create_app
 from Model.League import League
-from flask import Blueprint, request, jsonify, make_response, current_app
+from flask import jsonify, current_app
+from flask_socketio import SocketIO
 
 
 # create the app object
 app = create_app()
+
+# Create the Socket
+socketio = SocketIO(app)
+
+# Example WebSocket event for a client connection
+@socketio.on('connect')
+def handle_connect():
+    print('Client connected')
+
+# Example WebSocket event for a client disconnection
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('Client disconnected')
 
 @app.route('/start-draft', methods=['GET'])
 def start_draft():
