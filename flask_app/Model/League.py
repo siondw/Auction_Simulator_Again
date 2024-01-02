@@ -19,6 +19,7 @@ class League:
     def __init__(self, num_teams=10):
         self.teams = []
         self.players = []
+        self.player_dict = {}
         self.import_players()
         self.round_summaries = []
         self.nomination_order = []
@@ -57,23 +58,69 @@ class League:
 
     def import_players(self):
         self.players = PlayerImporter.import_players_from_csv("Resources/Players.csv")
+        self.player_dict = {player.name: player for player in self.players}
 
-    def conduct_auction_round(self, player_nominated):
+
+    # def conduct_auction_round(self, player_nominated):
+    #     # Set the nominating team as the first team in the order
+    #     nominating_team = self.teams[0]
+
+    #     # Get Player from Player Nominate method
+    #     player_nominated = self.nominate_player(nominating_team)
+
+    #     # Conduct the auction round with the nominating team as the highest bidder initially
+    #     round_of_auction = RoundOfAuction(self.teams, player_nominated, nominating_team)
+       
+    #     emit('new_round', {
+    #     'player': player_nominated.get_name(),  # Name or details of the player up for auction
+    #     'user_max': self.human_team.get_max_bid(), # Max bid of the human player for this round
+    #     'nominator': nominating_team.get_name()
+    # }, broadcast=True)
+        
+    #     current_app.current_auction_round = round_of_auction
+    #     round_of_auction.start_bidding()
+        
+    #     # Add the round summary to the list of summaries
+    #     self.round_summaries.append(round_of_auction.summarize_round())
+
+    #     # Move the nominating team to the end of the list
+    #     self.teams.append(self.teams.pop(0))
+
+
+    # Begins the auction round by calling on either the human or cpu to choose a player
+    def initiate_auction_round(self):
         # Set the nominating team as the first team in the order
         nominating_team = self.teams[0]
+
+        if nominating_team.name == "Team 1":  # Human team
+            # For the human team, the round will continue after user input
+            # So, exit the method here
+            return
 
         # Get Player from Player Nominate method
         player_nominated = self.nominate_player(nominating_team)
 
+        # For AI teams, continue as usual
+        self.continue_auction_round(player_nominated)
+    
+    def continue_auction_round(self, player_nominated):
+    # Assuming player_nominated is the player object or None
+        if player_nominated is None:
+            # Handle the case where no player is nominated (if necessary)
+            return
+
+        nominating_team = self.teams[0]
+
         # Conduct the auction round with the nominating team as the highest bidder initially
         round_of_auction = RoundOfAuction(self.teams, player_nominated, nominating_team)
-       
+    
+     
         emit('new_round', {
         'player': player_nominated.get_name(),  # Name or details of the player up for auction
         'user_max': self.human_team.get_max_bid(), # Max bid of the human player for this round
         'nominator': nominating_team.get_name()
     }, broadcast=True)
-        
+
         current_app.current_auction_round = round_of_auction
         round_of_auction.start_bidding()
         
@@ -82,7 +129,6 @@ class League:
 
         # Move the nominating team to the end of the list
         self.teams.append(self.teams.pop(0))
-
 
     def get_team_roster(self, team_name):
         for team in self.teams:
@@ -129,4 +175,6 @@ class League:
     def get_human(self):
         return self.human_team
         
+    def find_player_by_name(self, name):
+        return self.player_dict.get(name)
    

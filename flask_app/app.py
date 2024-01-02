@@ -29,7 +29,7 @@ def handle_disconnect():
     print('Client disconnected')
 
 @socketio.on('sendEvent')
-def print():
+def doSomething():
     print('Message Received!')
 
 @socketio.on('place_human_bid')
@@ -69,11 +69,51 @@ def handle_human_bid(data):
 @socketio.on('player_nominated')
 def handle_player_nomination(data):
     selected_player = data['player']
-    # Logic to handle the nominated player
-    # This could involve updating the game state, storing the nomination, etc.
+    print("Player Nominated")
+    
+    # Access the league instance stored in current_app
+    league = current_app.league
+    if not league:
+        # Handle the case where the league is not yet initialized
+        emit('error', {'message': 'League not initialized'})
+        return
 
-    # Optionally, emit a response or broadcast an update
-    emit('nomination_received', {'player': selected_player}, broadcast=True)
+    # Find the player object based on the selected player's name
+    player_object = league.find_player_by_name(selected_player)
+
+    if player_object:
+        # Call a method to continue the auction round with the nominated player
+        league.continue_auction_round(player_object)
+    else:
+        # Handle the case where the player is not found
+        emit('error', {'message': 'Player not found'})
+
+@socketio.on('start_round')
+def handle_start_round():
+    print("Start Round")
+    # Assuming you have an instance of your auction/league class
+    league = current_app.league
+        
+    league.initiate_auction_round()
+
+@socketio.on('pass_bid')
+def handle_pass_bid():
+    print("Pass Bid")
+    try:
+        auction = current_app.current_auction_round
+        if not auction:
+            raise ValueError("Auction round not available.")
+        auction.isHumanInterested = False
+    except Exception as e:
+        emit('error', {'message': str(e)})
+            
+# @app.errorhandler(Exception)
+# def handle_exception(e):
+#     # You can log the exception here for debugging
+#     # Then, emit a response to Appsmith
+#     emit('error', {'message': str(e)}, broadcast=True)
+#     return "Please wait for round to begin", 500
+
 
 @app.route('/start-draft', methods=['GET'])
 def start_draft():
