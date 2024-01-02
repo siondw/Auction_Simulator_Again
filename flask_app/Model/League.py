@@ -10,6 +10,9 @@ from Model.Strategies.TOP_HEAVY import TopHeavyStrategy
 from Model.Strategies.UNDER_20 import Under20Strategy
 from Model.Strategies.ZERO_RB import ZeroRBStrategy
 from Model.Team import Team
+from flask import current_app
+from flask_socketio import emit
+
 
 
 class League:
@@ -19,6 +22,7 @@ class League:
         self.import_players()
         self.round_summaries = []
         self.nomination_order = []
+        
 
         # Define the available strategies and corresponding weights
         strategies = [
@@ -31,8 +35,12 @@ class League:
         ]
         strategy_weights = [0.5, 0.05, 0.05, 0.085, 0.085, 0.2]
 
+        # Field for the Human Team to make retreival easier
+        self.human_team = None
+
         # Create the human team as Team 1
         human_team = Team(name="Team 1", strategy=HumanStrategy(team_budget=200))
+        self.human_team = human_team
         self.teams.append(human_team)
 
         # Create the remaining computer-controlled teams
@@ -59,6 +67,14 @@ class League:
 
         # Conduct the auction round with the nominating team as the highest bidder initially
         round_of_auction = RoundOfAuction(self.teams, player_nominated, nominating_team)
+       
+        emit('new_round', {
+        'player': player_nominated.get_name(),  # Name or details of the player up for auction
+        'user_max': self.human_team.get_max_bid(), # Max bid of the human player for this round
+        'nominator': nominating_team.get_name()
+    }, broadcast=True)
+        
+        current_app.current_auction_round = round_of_auction
         round_of_auction.start_bidding()
         
         # Add the round summary to the list of summaries
@@ -81,10 +97,9 @@ class League:
 
     def nominate_player(self, team):
         if team.name == "Team 1":  # Human team
-            # Logic to ask the user to select a player to nominate
-            # You may want to integrate with the view to display the options
-            # player_nominated = get_user_selected_player()
-            pass
+            emit('prompt_nomination', {'message': 'Please nominate a player.'})
+            # Rest of the logic will be handled after user input
+            return None
         else:
             # Filter out drafted players
             available_players = [player for player in self.players if not player.drafted]
@@ -110,3 +125,8 @@ class League:
             team_names.append(name)
 
         return team_names
+    
+    def get_human(self):
+        return self.human_team
+        
+   

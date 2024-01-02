@@ -17,7 +17,7 @@ COPY requirements.txt requirements.txt
 # install requirements inside the container using pip
 RUN pip install -r requirements.txt
 RUN pip install flask-socketio
-#dRUN pip install pandas
+RUN pip install pandas
 
 # expose port 4000 from the container
 EXPOSE 4000

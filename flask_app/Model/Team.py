@@ -96,7 +96,7 @@ class Team:
     def determine_slot(self, player):
         return  self.strategy.determine_slot(self.roster, player)
 
-    def is_human_strategy(self):
+    def is_human(self):
         return isinstance(self.strategy, HumanStrategy)
     
     def get_name(self):
