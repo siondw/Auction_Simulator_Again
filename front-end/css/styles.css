@@ -9,7 +9,7 @@ body {
 #tableContainer {
     max-height: 400px; /* Adjust the height as needed */
     overflow-y: auto; /* Adds vertical scrollbar */
-    margin: 20px auto; /* Centering the table container */
+    margin: 300px auto 20px; /* Centering the table container and adding margin-top */
     width: 80%; /* Adjust the width as needed */
 }
 
@@ -48,7 +48,9 @@ html, body {
 #playerTable th, #playerTable td {
     border: 1px solid #ddd;
     padding: 8px;
-    text-align: left;
+    text-align: center;
+    width: 1%;
+    white-space: nowrap;
 }
 
 #playerTable th {
