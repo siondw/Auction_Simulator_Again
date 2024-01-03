@@ -18,6 +18,7 @@ COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 RUN pip install flask-socketio
 RUN pip install pandas
+RUN pip install flask-cors
 
 # expose port 4000 from the container
 EXPOSE 4000

@@ -1,7 +1,6 @@
 # Some set up for the application 
 
 from flask import Flask
-from flaskext.mysql import MySQL
 from Model.League import League
 
 def create_app():

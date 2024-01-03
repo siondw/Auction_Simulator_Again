@@ -1,0 +1,60 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+#tableContainer {
+    max-height: 400px; /* Adjust the height as needed */
+    overflow-y: auto; /* Adds vertical scrollbar */
+    margin: 20px auto; /* Centering the table container */
+    width: 80%; /* Adjust the width as needed */
+}
+
+#playerTable {
+    width: 100%; /* Table takes the full width of its container */
+    border-collapse: collapse;
+    /* Add other table styles as needed */
+}
+
+/* Style for table header and cells */
+#playerTable th, #playerTable td {
+    padding: 8px; /* Adjust padding */
+    text-align: left; /* Align text to the left */
+    border-bottom: 1px solid #ddd; /* Add bottom border */
+}
+
+
+/* Ensure the width calculations are correct */
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+/* styles.css */
+#searchInput {
+    margin: 10px 0;
+    padding: 8px;
+    width: 200px;
+}
+
+#playerTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#playerTable th, #playerTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#playerTable th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Add more styling as needed */
+

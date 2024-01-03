@@ -10,10 +10,12 @@ from Model.RoundOfAuction import RoundOfAuction
 from Model.Team import Team
 from flask import jsonify, current_app
 from flask_socketio import SocketIO, emit
+from flask_cors import CORS
 
 
 # create the app object
 app = create_app()
+CORS(app)  
 
 # Create the Socket
 socketio = SocketIO(app, cors_allowed_origins="*")

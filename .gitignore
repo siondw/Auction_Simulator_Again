@@ -3,3 +3,4 @@ secrets/db_password.txt
 secrets/db_root_password.txt 
 __pycache__
 stacks
+node_modules
