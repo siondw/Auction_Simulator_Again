@@ -7,10 +7,22 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div id="tableContainer">
-    <!-- Search Bar -->
-    <input type="text" id="searchInput" placeholder="Search players...">
     
+<!-- Search Bar Container -->
+<div id="searchBarContainer">
+    <input type="text" id="searchInput" placeholder="Search players...">
+    <select id="positionDropdown">
+        <option value="All" selected>All</option>
+        <option value="QB">QB</option>
+        <option value="RB">RB</option>
+        <option value="WR">WR</option>
+        <option value="TE">TE</option>
+        <option value="FLEX">FLEX</option>
+    </select>
+</div>
+
+<!-- Table Container -->
+<div id="tableContainer">
     <!-- Player Table -->
     <table id="playerTable">
         <thead>

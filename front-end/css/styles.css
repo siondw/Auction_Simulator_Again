@@ -1,4 +1,3 @@
-/* styles.css */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -6,38 +5,29 @@ body {
     background-color: #f4f4f4;
 }
 
-#tableContainer {
-    max-height: 400px; /* Adjust the height as needed */
-    overflow-y: auto; /* Adds vertical scrollbar */
-    margin: 300px auto 20px; /* Centering the table container and adding margin-top */
-    width: 80%; /* Adjust the width as needed */
+#searchBarContainer {
+    position: sticky;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.5); /* Adjust background color and transparency as needed */
+    z-index: 20;
+    width: 69%; /* Match the width of the table */
+    margin: 270px auto 0; /* Align with the table's top margin */
+    padding: 10px;
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4); /* Optional: adds shadow for depth */
 }
 
-#playerTable {
-    width: 100%; /* Table takes the full width of its container */
-    border-collapse: collapse;
-    /* Add other table styles as needed */
-}
-
-/* Style for table header and cells */
-#playerTable th, #playerTable td {
-    padding: 8px; /* Adjust padding */
-    text-align: left; /* Align text to the left */
-    border-bottom: 1px solid #ddd; /* Add bottom border */
-}
-
-
-/* Ensure the width calculations are correct */
-html, body {
-    height: 100%;
-    margin: 0;
-}
-
-/* styles.css */
 #searchInput {
-    margin: 10px 0;
+    margin: 0;
     padding: 8px;
-    width: 200px;
+    width: calc(120px); 
+}
+
+#tableContainer {
+    /* background-color: rgba(76,175,80,0.6); */
+    max-height: 400px;
+    overflow-y: auto;
+    margin: 0px auto; /* Reduced top margin to bring table closer to search bar */
+    width: 70%;
 }
 
 #playerTable {
@@ -45,12 +35,41 @@ html, body {
     border-collapse: collapse;
 }
 
+/* Table header and cell styles */
 #playerTable th, #playerTable td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: center;
-    width: 1%;
     white-space: nowrap;
+}
+
+/* Styles for even rows */
+#playerTable tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+/* Styles for odd rows */
+#playerTable tr:nth-child(odd) {
+    background-color: white;
+}
+
+#playerTable button {
+    background-color: #f2f2f2; /* Green background */
+    border: 1px solid black; /* Add black border */
+    color: black; /* White text */
+    padding: 8px 16px; /* Smaller padding around the text */
+    text-align: center; /* Center the text */
+    text-decoration: none; /* Remove underline */
+    display: inline-block;
+    font-size: 14px; /* Smaller font size */
+    margin: 4px 2px;
+    cursor: pointer; /* Change cursor to pointer when hovering over the button */
+    border-radius: 12px; /* Rounded corners */
+    transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+#playerTable button:hover {
+    background-color: #45a049; /* Darker green when hovering */
 }
 
 #playerTable th {
@@ -58,5 +77,17 @@ html, body {
     color: white;
 }
 
-/* Add more styling as needed */
+#playerTable thead th {
+    position: sticky;
+    top: [Height of the searchBarContainer]; /* Adjust this value */
+    background-color: #4CAF50;
+    z-index: 10;
+}
+
+#positionDropdown {
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    height: 35px;
+}
 

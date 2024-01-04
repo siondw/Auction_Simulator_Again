@@ -49,7 +49,7 @@ function searchTable() {
 
     // Loop through all table rows and hide those that don't match the search query
     for (let i = 0; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[0]; // Change the index if you want to search in another column
+        let td = tr[i].getElementsByTagName("td")[1]; // Change the index if you want to search in another column
         if (td) {
             let txtValue = td.textContent || td.innerText;
             if (txtValue.toUpperCase().indexOf(filter) > -1) {
@@ -63,6 +63,29 @@ function searchTable() {
 
     // Attach search function to search input
     document.getElementById('searchInput').addEventListener('keyup', searchTable);
+
+    document.getElementById('positionDropdown').addEventListener('change', function() {
+        filterTableByPosition(this.value);
+    });
+    
+    function filterTableByPosition(position) {
+        const table = document.getElementById('playerTable');
+        const rows = table.getElementsByTagName('tr');
+    
+        for (let i = 1; i < rows.length; i++) { // Start loop from 1 to skip table header
+            let td = rows[i].getElementsByTagName('td')[3]; // 4th column for position
+            if (td) {
+                let cellValue = td.textContent || td.innerText;
+                // Show the row if position matches, or if position is 'FLEX' (excluding 'QB'), or if 'All' is selected
+                if (position === 'All' || (position === 'FLEX' && cellValue !== 'QB') || cellValue === position) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
+    }    
+    
 });
 
 
