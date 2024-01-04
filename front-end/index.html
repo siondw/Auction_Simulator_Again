@@ -14,56 +14,86 @@
         <h1>Welcome to the Cottage League Mock Drafter</h1>
         <button id="startButton">Let's Do It</button>
     </div>
-    <div class="loader"></div>
 </div>
+
+
+<div id="pageContainer">
+
+        
+    
+    <div id="draftLogicContainer">
+        <!-- Reset Button Container -->
+        <div id="resetButtonContainer">
+            <button id="resetButton">Reset Draft</button>
+        </div>
+    
+        <!-- Dynamic Content Area -->
+        <div id="dynamicContent">
+            <div id="playerInfo">
+                <h2 id="nominatedPlayer">Player Nominated: [nominated player]</h2>
+                <p id="highestBidder">Highest Bidder: [highest bidder]</p>
+            </div>
+
+            <div id="bidControls">
+                <span id="currentBid">0</span> <!-- Default bid value -->
+
+                <div id="buttonContainer">
+
+                    <div id="inputButtonContainer">
+                        <input type="number" id="bidInput" min="1" max="186" value="1">
+                        <button id="bidButton">Bid</button>
+                    </div>                
+                    <button id="passButton">Pass</button>
+                </div>
+            </div>
+        </div>
+    </div>
     
 
-<div id="resetButtonContainer">
-    <button id="resetButton">Reset Draft</button>
-</div>
 
-<div id="mainContainer">
-    <div id="nominationOrder">
-        <h3>Nomination Order:</h3>
-        <ul id="nominationOrderList">
-            <!-- List items will be added here by the JavaScript -->
-        </ul>
-    </div>
+    <div id="mainContainer">
+        <div id="nominationOrder">
+            <h3>Nomination Order:</h3>
+            <ul id="nominationOrderList">
+                <!-- List items will be added here by the JavaScript -->
+            </ul>
+        </div>
 
         <div id="searchAndTableContainer">
-        <!-- Search Bar Container -->
-<div id="searchBarContainer">
-    <input type="text" id="searchInput" placeholder="Search players...">
-    <select id="positionDropdown">
-        <option value="All" selected>All</option>
-        <option value="QB">QB</option>
-        <option value="RB">RB</option>
-        <option value="WR">WR</option>
-        <option value="TE">TE</option>
-        <option value="FLEX">FLEX</option>
-    </select>
-</div>
-        <!-- Table Container -->
-        <div id="tableContainer">
-            <!-- Player Table -->
-            <table id="playerTable">
-                <thead>
-                    <tr>
-                        <th>Nominate</th>
-                        <th>Name</th>
-                        <th>Estimated Value</th>
-                        <th>Position</th>
-                        <th>Positional Rank</th>
-                        <th>Projected Points</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Player rows will be added here dynamically -->
-                </tbody>
-            </table>
+            <!-- Search Bar Container -->
+            <div id="searchBarContainer">
+                <input type="text" id="searchInput" placeholder="Search players...">
+                <select id="positionDropdown">
+                    <option value="All" selected>All</option>
+                    <option value="QB">QB</option>
+                    <option value="RB">RB</option>
+                    <option value="WR">WR</option>
+                    <option value="TE">TE</option>
+                    <option value="FLEX">FLEX</option>
+                </select>
+            </div>
+            <!-- Table Container -->
+            <div id="tableContainer">
+                <!-- Player Table -->
+                <table id="playerTable">
+                    <thead>
+                        <tr>
+                            <th>Nominate</th>
+                            <th>Name</th>
+                            <th>Estimated Value</th>
+                            <th>Position</th>
+                            <th>Positional Rank</th>
+                            <th>Projected Points</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Player rows will be added here dynamically -->
+                    </tbody>
+                </table>
+            </div>
         </div>
-        </div>
-    <div id="spacer"></div>
+        <div id="spacer"></div>
+    </div>
 </div>
 
 

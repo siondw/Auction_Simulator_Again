@@ -58,12 +58,26 @@ html, body {
     display: none;
 }
 
+
+
+#pageContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full height of the viewport */
+}
+
+
+/* ===============================================
+============== DRAFT SCREEN --- HEADER==================
+=============================================== */
+
+
 /* Reset button container at the top right */
 #resetButtonContainer {
     padding: 10px;
     position: absolute;
-    right: 0;
-    top: 0;
+    right: 10px; /* Adjust as needed */
+    align-items: center;
 }
 
 /* Reset button styles */
@@ -83,6 +97,139 @@ html, body {
 #resetButton:hover {
     background-color: #ea4842; /* Darker red on hover */
 }
+
+#draftLogicContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center align children */
+    justify-content: center; /* Vertically center */
+    height: 100%;
+    padding: 20px;
+    /* Other styles... */
+}
+
+#resetButtonContainer {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* Other styles... */
+}
+
+#dynamicContent {
+    text-align: center; /* Center align text */
+    margin-top: 0px; /* Spacing from the reset button */
+}
+
+#playerInfo h2, #playerInfo p {
+    margin: 5px 0; /* Vertical spacing */
+}
+
+#playerInfo h2 {
+    font-size: 2em; /* Slightly larger font for nominated player */
+}
+
+#playerInfo p {
+    font-size: 1em; /* Standard font size for highest bidder */
+}
+
+#bidControls {
+    display: flex;
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Align items in the middle */
+    justify-content: center; /* Vertically center */
+    margin-top: 15px; /* Spacing from player info */
+}
+
+#currentBid {
+    font-size: 3em; /* Larger font for bid amount */
+    margin-bottom: 10px; /* Spacing above the buttons */
+}
+
+#buttonContainer {
+    display: flex;
+    justify-content: center; /* Center the buttons horizontally */
+    width: 100%; /* Full width to accommodate child elements */
+    margin-top: 5px; /* Spacing from the current bid */
+}
+
+#inputButtonContainer {
+    flex: 1;
+    display: flex;
+    margin-right: 100px; /* Spacing between the input/button container and the pass button */
+}
+
+#bidInput {
+    flex: 1; /* Allows the input to take twice as much space as the bid button */
+    padding: 5px;
+    text-align: center;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+#bidButton {
+    flex: 3; /* The bid button takes up the remaining space */
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
+#bidButton:hover {
+    background-color: #45a049;
+}
+
+#passButton {
+    flex: 1;
+    cursor: pointer;
+    color: red;
+    background-color: transparent;
+    border-style: solid;
+    border-color: red;
+    border-width: 1px;
+    border-radius: 5px;
+}
+
+#passButton:hover {
+    background-color: red;
+    color: white;
+    border-color: red;
+}
+
+
+
+
+
+
+
+/* ===============================================
+============== DRAFT SCREEN --- DRAFT LOGIC==================
+=============================================== */
+
+#draftLogicContainer {
+    flex-grow: 1; /* Grow to take up all available space */
+    background-color: #f4f4f4; /* Light background for contrast */
+    padding: 20px; /* Add some padding for internal spacing */
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle inner shadow for depth */
+    overflow-y: auto; /* In case the content overflows */
+    color: #333; /* Dark text for readability */
+    font-size: 1em; /* Standard font size, adjust as needed */
+    position: relative
+}
+
+
+
+/* ===============================================
+============== DRAFT SCREEN --- Bottom HALF==================
+=============================================== */
+
+
+
+
+
+
 #mainContainer {
     margin-top: auto;
     display: flex;
@@ -218,37 +365,7 @@ html, body {
     height: 35px;
 }
 
-/* Loader CSS */
-.loader {
-    width: 50px;
-    aspect-ratio: 1;
-    display: grid;
-    margin: auto; /* Center the loader */
-  }
-  
-  .loader:before,
-  .loader:after {
-    content: "";
-    grid-area: 1/1;
-    border-radius: 50%;
-    background: #4CAF50;
-    -webkit-mask: repeating-linear-gradient(#000 0 5px, #0000 0 10px);
-    animation: l35 1.5s infinite;
-  }
-  
-  .loader:after {
-    -webkit-mask: repeating-linear-gradient(#0000 0 5px, #000 0 10px);
-    --s: -1;
-  }
-  
-  @keyframes l35 {
-    0%,
-    10% {transform: translate(0) rotate(0)}
-    35% {transform: translate(calc(var(--s,1)*50%)) rotate(0)}
-    66% {transform: translate(calc(var(--s,1)*50%)) rotate(calc(var(--s,1)*180deg))}
-    90%,
-    100% {transform: translate(0) rotate(calc(var(--s,1)*180deg))}
-  }
+
 
 
 
