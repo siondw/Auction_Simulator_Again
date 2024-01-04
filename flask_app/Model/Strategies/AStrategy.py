@@ -23,7 +23,7 @@ class Strategy(ABC):
     def calculate_bid(self, team, player, current_bid):
         roster = team.roster
         # Determine the appropriate slot for the player
-        slot = self.determine_slot(roster, player.get_position())
+        slot = self.determine_slot(roster, player)
 
         # If there's no available slot, do not place a bid
         if slot is None:

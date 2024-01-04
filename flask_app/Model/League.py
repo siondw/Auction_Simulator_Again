@@ -149,16 +149,23 @@ class League:
         else:
             # Filter out drafted players
             available_players = [player for player in self.players if not player.drafted]
-        
+            
             # Consider top 15 players at each position among the available players
-            top_players = sorted(available_players, key=lambda x: x.positional_rank)[:15]
-        
+            top_players_count = min(15, len(available_players))  # Ensures we do not exceed the available players count
+            top_players = sorted(available_players, key=lambda x: x.positional_rank)[:top_players_count]
+            
+            # The weights must correspond to the total number of available players
+            # The top players get higher weight
+            weights = [0.6] * top_players_count + [0.4] * (len(available_players) - top_players_count)
+
             # Randomly select a player from the list of available players
-            # with a bias toward the top 15 at each position
-            player_nominated = random.choices(top_players + available_players,
-                                              weights=[0.6] * 15 + [0.4] * (len(available_players) - 15), k=1)[0]
-        
+            # with a bias toward the top players at each position
+            player_nominated = random.choices(available_players, weights=weights, k=1)[0]
+            
+        print(player_nominated)
         return player_nominated
+
+
 
     def get_all_players(self):
         return self.players

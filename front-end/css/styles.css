@@ -94,9 +94,28 @@ html, body {
     text-decoration: none;
 }
 
+
 #resetButton:hover {
     background-color: #ea4842; /* Darker red on hover */
 }
+
+#startRound {
+    background-color: #4c80af;
+    border: none;
+    border-radius: 50px; /* Rounded */
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration:wavy;
+}
+
+#startRound:hover {
+    background-color: #65acea;
+}
+
 
 #draftLogicContainer {
     display: flex;

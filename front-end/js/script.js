@@ -73,6 +73,7 @@ class SocketIOManager {
 
     startRound() {
         this.socket.emit("start_round");
+        console.log("Round Begun")
     }
 
     passBid() {
@@ -104,7 +105,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Attach the event listener to the start button
         document.getElementById('startButton').addEventListener('click', startDraft);
     }
+
+        // Get your "Start Round" button by ID
+        const startRoundButton = document.getElementById('startRound');
+
+        // Attach an event listener to the "Start Round" button
+        startRoundButton.addEventListener('click', () => {
+            // Call the startRound method when the button is clicked
+            socket.startRound();
+    
+            // Optionally disable the button after starting the round to prevent multiple clicks
+            startRoundButton.disabled = true;
+        });
 });
+
 
 
 function startDraft() {
