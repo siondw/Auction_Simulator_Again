@@ -5,6 +5,30 @@ body {
     background-color: #f4f4f4;
 }
 
+.welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it's above all other content */
+}
+
+.welcome-content h1 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Hide the welcome screen initially */
+.welcome-screen.hidden {
+    display: none;
+}
+
+
 #searchBarContainer {
     position: sticky;
     top: 0;

@@ -1,92 +1,156 @@
 // script.js
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Fetch data from API
+// Event listener for the welcome screen 'Enter' button
+document.getElementById('startButton').addEventListener('click', function() {
+    // Hide the welcome screen
+    document.getElementById('welcomeScreen').style.display = 'none';
+
+    // Initialize the league, then load table data and establish WebSocket connection
+    startDraft();
+});
+
+function startDraft() {
+    // Call Flask route to start the draft
+    fetch('http://localhost:8001/start-draft')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Draft started:', data.message);
+        // Now that the draft is started, fetch players and set up the rest of the app
+        fetchPlayersAndSetupApp();
+    })
+    .catch(error => {
+        console.error('Error starting draft:', error);
+    });
+}
+
+
+function fetchPlayersAndSetupApp() {
+    // Fetch data from API to populate the table
     fetch('http://localhost:8001/p/players')
         .then(response => response.json())
         .then(data => {
-            // Populate the table with the fetched data
             populateTable(data);
+            setupSocketIO();
         })
         .catch(error => {
-            console.error('Error fetching data:', error);
+            console.error('Error fetching player data:', error);
         });
+}
+// Function to populate the table with player data
+function populateTable(players) {
+    const tableBody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
+    tableBody.innerHTML = ''; // Clear the table body
 
+    // Insert new rows
+    players.forEach(player => {
+        let row = tableBody.insertRow();
+        row.innerHTML = `
+            <td><button onclick="nominatePlayer('${player.name}')">Nominate</button></td>
+            <td>${player.name}</td>
+            <td>${player.estimated_value}</td>
+            <td>${player.pos}</td>
+            <td>${player.positional_rank}</td>
+            <td>${player.projected_points}</td>
+        `;
+    });
+}
+
+// Function to set up Socket.IO (no changes needed)
+function setupSocketIO() {
     // Socket.IO client setup
     const socket = io('http://localhost:8001'); // Adjust with your server URL
 
-    // Function to populate the table with player data
-    function populateTable(players) {
-        const tableBody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
-        tableBody.innerHTML = ''; // Clear the table body
+    // You can also establish your Socket.IO event handlers here
+    // Example: socket.on('event', handlerFunction);
 
-        // Insert new rows
-        players.forEach(player => {
-            let row = tableBody.insertRow();
-            row.innerHTML = `
-                <td><button onclick="nominatePlayer('${player.name}')">Nominate</button></td>
-                <td>${player.name}</td>
-                <td>${player.estimated_value}</td>
-                <td>${player.pos}</td>
-                <td>${player.positional_rank}</td>
-                <td>${player.projected_points}</td>
-            `;
-        });
-    }
+    // ... your existing Socket.IO setup code ...
+}
 
-    // Function to handle player nomination
-    function nominatePlayer(playerName) {
-        console.log('Player nominated:', playerName);
-        // Add logic to handle nomination
-    }
-    
-    // Function to filter the table
+  // Function to handle player nomination
+  function nominatePlayer(playerName) {
+    console.log('Player nominated:', playerName);
+    // Add logic to handle nomination
+}
+
+// Function to filter the table
 function searchTable() {
-    const searchInput = document.getElementById('searchInput');
-    const filter = searchInput.value.toUpperCase();
-    const tbody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
-    const tr = tbody.getElementsByTagName('tr');
+const searchInput = document.getElementById('searchInput');
+const filter = searchInput.value.toUpperCase();
+const tbody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
+const tr = tbody.getElementsByTagName('tr');
 
-    // Loop through all table rows and hide those that don't match the search query
-    for (let i = 0; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[1]; // Change the index if you want to search in another column
-        if (td) {
-            let txtValue = td.textContent || td.innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                tr[i].style.display = "";
-            } else {
-                tr[i].style.display = "none";
-            }
+// Loop through all table rows and hide those that don't match the search query
+for (let i = 0; i < tr.length; i++) {
+    let td = tr[i].getElementsByTagName("td")[1]; // Change the index if you want to search in another column
+    if (td) {
+        let txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
         }
     }
 }
+}
 
-    // Attach search function to search input
-    document.getElementById('searchInput').addEventListener('keyup', searchTable);
+// Attach search function to search input
+document.getElementById('searchInput').addEventListener('keyup', searchTable);
 
-    document.getElementById('positionDropdown').addEventListener('change', function() {
-        filterTableByPosition(this.value);
-    });
-    
-    function filterTableByPosition(position) {
-        const table = document.getElementById('playerTable');
-        const rows = table.getElementsByTagName('tr');
-    
-        for (let i = 1; i < rows.length; i++) { // Start loop from 1 to skip table header
-            let td = rows[i].getElementsByTagName('td')[3]; // 4th column for position
-            if (td) {
-                let cellValue = td.textContent || td.innerText;
-                // Show the row if position matches, or if position is 'FLEX' (excluding 'QB'), or if 'All' is selected
-                if (position === 'All' || (position === 'FLEX' && cellValue !== 'QB') || cellValue === position) {
-                    rows[i].style.display = '';
-                } else {
-                    rows[i].style.display = 'none';
-                }
+document.getElementById('positionDropdown').addEventListener('change', function() {
+    filterTableByPosition(this.value);
+});
+
+function filterTableByPosition(position) {
+    const table = document.getElementById('playerTable');
+    const rows = table.getElementsByTagName('tr');
+
+    for (let i = 1; i < rows.length; i++) { // Start loop from 1 to skip table header
+        let td = rows[i].getElementsByTagName('td')[3]; // 4th column for position
+        if (td) {
+            let cellValue = td.textContent || td.innerText;
+            // Show the row if position matches, or if position is 'FLEX' (excluding 'QB'), or if 'All' is selected
+            if (position === 'All' || (position === 'FLEX' && cellValue !== 'QB') || cellValue === position) {
+                rows[i].style.display = '';
+            } else {
+                rows[i].style.display = 'none';
             }
         }
-    }    
+    }
+}    
+
+
+
+
+
+
+
+
+
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Fetch data from API
+//     fetch('http://localhost:8001/p/players')
+//         .then(response => response.json())
+//         .then(data => {
+//             // Populate the table with the fetched data
+//             populateTable(data);
+//         })
+//         .catch(error => {
+//             console.error('Error fetching data:', error);
+//         });
+
+//     // Socket.IO client setup
+//     const socket = io('http://localhost:8001'); // Adjust with your server URL
+
     
-});
+
+  
+    
+// });
 
 
 
