@@ -11,12 +11,27 @@
 <!-- Welcome Screen Overlay -->
 <div id="welcomeScreen" class="welcome-screen">
     <div class="welcome-content">
-        <h1>Welcome to the Auction App</h1>
-        <button id="startButton">Enter</button>
+        <h1>Welcome to the Cottage League Mock Drafter</h1>
+        <button id="startButton">Let's Do It</button>
     </div>
+    <div class="loader"></div>
 </div>
     
-<!-- Search Bar Container -->
+
+<div id="resetButtonContainer">
+    <button id="resetButton">Reset Draft</button>
+</div>
+
+<div id="mainContainer">
+    <div id="nominationOrder">
+        <h3>Nomination Order:</h3>
+        <ul id="nominationOrderList">
+            <!-- List items will be added here by the JavaScript -->
+        </ul>
+    </div>
+
+        <div id="searchAndTableContainer">
+        <!-- Search Bar Container -->
 <div id="searchBarContainer">
     <input type="text" id="searchInput" placeholder="Search players...">
     <select id="positionDropdown">
@@ -28,26 +43,29 @@
         <option value="FLEX">FLEX</option>
     </select>
 </div>
-
-<!-- Table Container -->
-<div id="tableContainer">
-    <!-- Player Table -->
-    <table id="playerTable">
-        <thead>
-            <tr>
-                <th>Nominate</th>
-                <th>Name</th>
-                <th>Estimated Value</th>
-                <th>Position</th>
-                <th>Positional Rank</th>
-                <th>Projected Points</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Player rows will be added here dynamically -->
-        </tbody>
-    </table>
+        <!-- Table Container -->
+        <div id="tableContainer">
+            <!-- Player Table -->
+            <table id="playerTable">
+                <thead>
+                    <tr>
+                        <th>Nominate</th>
+                        <th>Name</th>
+                        <th>Estimated Value</th>
+                        <th>Position</th>
+                        <th>Positional Rank</th>
+                        <th>Projected Points</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Player rows will be added here dynamically -->
+                </tbody>
+            </table>
+        </div>
+        </div>
+    <div id="spacer"></div>
 </div>
+
 
 <div id="app">
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>

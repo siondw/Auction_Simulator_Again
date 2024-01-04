@@ -1,7 +1,30 @@
 // script.js
 
+document.addEventListener('DOMContentLoaded', () => {
+    const draftStarted = localStorage.getItem('draftStarted');
+
+    // Hide the loader initially
+    document.querySelector('#welcomeScreen .loader').style.display = 'none';
+
+    if (draftStarted) {
+        // Hide the welcome screen
+        document.getElementById('welcomeScreen').style.display = 'none';
+        // Continue with the application setup
+        fetchPlayersAndSetupApp();
+        fetchNominationOrder();
+    } else {
+        // Show the welcome screen
+        document.getElementById('welcomeScreen').style.display = 'block';
+        // Attach the event listener to the start button
+        document.getElementById('startButton').addEventListener('click', startDraft);
+    }
+});
+
 // Event listener for the welcome screen 'Enter' button
 document.getElementById('startButton').addEventListener('click', function() {
+    // Show the loading spinner
+    document.getElementById('loadingSpinner').style.display = 'block';
+
     // Hide the welcome screen
     document.getElementById('welcomeScreen').style.display = 'none';
 
@@ -10,7 +33,6 @@ document.getElementById('startButton').addEventListener('click', function() {
 });
 
 function startDraft() {
-    // Call Flask route to start the draft
     fetch('http://localhost:8001/start-draft')
     .then(response => {
         if (!response.ok) {
@@ -20,12 +42,18 @@ function startDraft() {
     })
     .then(data => {
         console.log('Draft started:', data.message);
-        // Now that the draft is started, fetch players and set up the rest of the app
         fetchPlayersAndSetupApp();
+        fetchNominationOrder();
     })
     .catch(error => {
         console.error('Error starting draft:', error);
+    })
+    .finally(() => {
+        // Hide the loader and the welcome screen after draft starts
+        document.getElementById('welcomeScreen').style.display = 'none';
     });
+
+    localStorage.setItem('draftStarted', true);
 }
 
 
@@ -41,6 +69,30 @@ function fetchPlayersAndSetupApp() {
             console.error('Error fetching player data:', error);
         });
 }
+
+function fetchNominationOrder() {
+    fetch('http://localhost:8001/t/get-team-names')
+        .then(response => response.json())
+        .then(teamNames => {
+            const list = document.getElementById('nominationOrderList');
+            teamNames.forEach(teamName => {
+                const listItem = document.createElement('li');
+                listItem.textContent = teamName;
+
+                // Extracting the team number from the team name
+                const teamNumber = teamName.split(' ')[1]; // Assuming the format "Team X"
+                listItem.id = teamNumber; // Setting the ID as X
+
+                list.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching nomination order:', error);
+        });
+}
+
+
+
 // Function to populate the table with player data
 function populateTable(players) {
     const tableBody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
@@ -121,7 +173,26 @@ function filterTableByPosition(position) {
             }
         }
     }
-}    
+}
+
+document.getElementById('resetButton').addEventListener('click', function() {
+    restartDraft();
+
+    if(socket){
+        socket.disconnect();
+    }
+});
+
+
+function restartDraft() {
+    // Clear the localStorage
+    localStorage.clear();
+    // Reload the page to reset the state
+    window.location.reload();
+}
+
+
+
 
 
 

@@ -1,65 +1,165 @@
-body {
+html, body {
+    height: 100%; /* This ensures that the body takes the full height of the viewport */
+    display: flex; /* Enables flexbox */
+    flex-direction: column; /* Aligns children elements vertically */
+    justify-content: flex-end; /* Aligns children to the end (bottom) of the container */
+    background: #f4f4f4;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
 }
 
+
+/* Welcome screen overlay and content styles */
 .welcome-screen {
+    align-items: center;
+    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    left: 0;
     position: fixed;
     top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.9); /* Semi-transparent white background */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000; /* Ensure it's above all other content */
+    z-index: 1000; /* Above all other content */
 }
 
 .welcome-content h1 {
-    margin-bottom: 20px;
+    margin-bottom: 80px;
     text-align: center;
 }
 
-/* Hide the welcome screen initially */
+/* Start button styles */
+#startButton {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 16px;
+    left: 50%;
+    margin: 4px 2px;
+    padding: 15px 32px;
+    position: fixed;
+    text-align: center;
+    text-decoration: none;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    transition: background-color 0.3s;
+}
+
+#startButton:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Hidden class for welcome screen */
 .welcome-screen.hidden {
     display: none;
 }
 
+/* Reset button container at the top right */
+#resetButtonContainer {
+    padding: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+/* Reset button styles */
+#resetButton {
+    background-color: #AF4F4C; /* Red */
+    border: none;
+    border-radius: 50px; /* Rounded */
+    color: white;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 14px;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+}
+
+#resetButton:hover {
+    background-color: #ea4842; /* Darker red on hover */
+}
+#mainContainer {
+    margin-top: auto;
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+}
+
+#nominationOrder {
+    flex: 0 0 auto; /* Don't grow or shrink, but be automatically sized by content */
+    margin-left: 20px;
+    margin-right: 80px; /* Space between the list and the table */
+    /* width: 200px; Uncomment this if you want a specific width */
+}
+
+#nominationOrderList {
+    list-style: none; /* Removes default list item styling */
+    padding: 0; /* Resets any default padding */
+}
+
+#nominationOrderList li {
+    background-color: #4c80af; /* Choose a color for your bubbles */
+    border-radius: 20px; /* Adjust as needed to create an oval shape */
+    color: white; /* Text color */
+    margin: 10px 0; /* Adds space between list items */
+    padding: 10px 20px; /* Adjust padding to control the size of the bubbles */
+    text-align: center; /* Center the text inside the bubble */
+
+    /* Optional: Add a shadow or other effects */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    
+    /* Optional: Add a transition for hover effects */
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+#tableAndSearchContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Take up the remaining space */
+}
 
 #searchBarContainer {
-    position: sticky;
-    top: 0;
-    background-color: rgba(255, 255, 255, 0.5); /* Adjust background color and transparency as needed */
-    z-index: 20;
-    width: 69%; /* Match the width of the table */
-    margin: 270px auto 0; /* Align with the table's top margin */
+    background-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4);
     padding: 10px;
-    box-shadow: 0 2px 2px -1px rgba(0,0,0,0.4); /* Optional: adds shadow for depth */
+    position: sticky;
+    top: 0; /* Stick to the top */
+    width: 100%; /* Match the width of the table */
+    z-index: 20;
 }
 
 #searchInput {
-    margin: 0;
     padding: 8px;
-    width: calc(120px); 
+    width: 40%; /* Match the full width of the search bar container */
 }
 
 #tableContainer {
-    /* background-color: rgba(76,175,80,0.6); */
-    max-height: 400px;
+    max-height: 60vh; /* Set the max height to 100% of the viewport height */
+    padding: 10px;
     overflow-y: auto;
-    margin: 0px auto; /* Reduced top margin to bring table closer to search bar */
-    width: 70%;
+    width: 100%; /* Ensure it takes the full width of its parent */
 }
 
 #playerTable {
-    width: 100%;
-    border-collapse: collapse;
+    padding: 10px;
+    width: 100%; /* Ensure the table stretches to the width of its container */
 }
 
-/* Table header and cell styles */
+#spacer {
+    /* Adjust this as needed or remove if not used */
+    flex: 0 0 auto; /* Don't grow or shrink */
+}
+
+/* Player table styles */
+#playerTable {
+    border-collapse: collapse;
+    width: 100%;
+}
+
 #playerTable th, #playerTable td {
     border: 1px solid #ddd;
     padding: 8px;
@@ -67,36 +167,39 @@ body {
     white-space: nowrap;
 }
 
-/* Styles for even rows */
 #playerTable tr:nth-child(even) {
     background-color: #f2f2f2;
 }
 
-/* Styles for odd rows */
 #playerTable tr:nth-child(odd) {
     background-color: white;
 }
 
 #playerTable button {
-    background-color: #f2f2f2; /* Green background */
-    border: 1px solid black; /* Add black border */
-    color: black; /* White text */
-    padding: 8px 16px; /* Smaller padding around the text */
-    text-align: center; /* Center the text */
-    text-decoration: none; /* Remove underline */
+    background-color: #f2f2f2;
+    border: 1px solid black;
+    border-radius: 12px;
+    color: black;
+    cursor: pointer;
     display: inline-block;
-    font-size: 14px; /* Smaller font size */
+    font-size: 14px;
     margin: 4px 2px;
-    cursor: pointer; /* Change cursor to pointer when hovering over the button */
-    border-radius: 12px; /* Rounded corners */
-    transition: background-color 0.3s; /* Transition for hover effect */
+    padding: 8px 16px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
 }
 
 #playerTable button:hover {
-    background-color: #45a049; /* Darker green when hovering */
+    background-color: #45a049; /* Darker green on hover */
 }
 
 #playerTable th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#playerTable thead th {
     background-color: #4CAF50;
     color: white;
 }
@@ -114,4 +217,39 @@ body {
     border: 1px solid #ddd;
     height: 35px;
 }
+
+/* Loader CSS */
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    display: grid;
+    margin: auto; /* Center the loader */
+  }
+  
+  .loader:before,
+  .loader:after {
+    content: "";
+    grid-area: 1/1;
+    border-radius: 50%;
+    background: #4CAF50;
+    -webkit-mask: repeating-linear-gradient(#000 0 5px, #0000 0 10px);
+    animation: l35 1.5s infinite;
+  }
+  
+  .loader:after {
+    -webkit-mask: repeating-linear-gradient(#0000 0 5px, #000 0 10px);
+    --s: -1;
+  }
+  
+  @keyframes l35 {
+    0%,
+    10% {transform: translate(0) rotate(0)}
+    35% {transform: translate(calc(var(--s,1)*50%)) rotate(0)}
+    66% {transform: translate(calc(var(--s,1)*50%)) rotate(calc(var(--s,1)*180deg))}
+    90%,
+    100% {transform: translate(0) rotate(calc(var(--s,1)*180deg))}
+  }
+
+
+
 
