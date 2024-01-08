@@ -16,7 +16,12 @@ class QBHeavyStrategy(Strategy, ABC):
             'WR3': 0.10 * 200,  # 10%
             'TE1': 0.01 * 200,  # 1%
             'Flex': 0.09 * 200,  # 9%
-            'Bench': 0.105 * 200,  # 10.5% for all bench slots
+            'BN1': 0.0175 * 200,  # 1.75%
+            'BN2': 0.0175 * 200,  # 1.75%
+            'BN3': 0.0175 * 200,  # 1.75%
+            'BN4': 0.0175 * 200,  # 1.75%
+            'BN5': 0.0175 * 200,  # 1.75%
+            'BN6': 0.0175 * 200,  # 1.75%
         }
 
     def bias(self, player, bid_probability, current_bid, team):

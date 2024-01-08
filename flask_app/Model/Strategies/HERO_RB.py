@@ -27,7 +27,7 @@ class HeroRBStrategy(Strategy, ABC):
     def bias(self, player, bid_probability, current_bid, team):
         pos = player.get_position()
         rank = player.get_positional_rank()
-        rb1_player = team.get_player_from_slot('RB1')
+        rb1_player = team.get_player_by_slot('RB1')
 
         if rb1_player is None and pos == 'RB' and rank >= 3:
             # Increase the bid probability by 10%

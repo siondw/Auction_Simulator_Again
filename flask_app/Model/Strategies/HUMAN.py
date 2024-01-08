@@ -1,4 +1,4 @@
-from Model.Strategies.AStrategy import Strategy
+from .AStrategy import Strategy
 
 
 class HumanStrategy(Strategy):

@@ -16,7 +16,12 @@ class ZeroRBStrategy(Strategy, ABC):
             'WR3': 0.15 * 200,  # 15%
             'TE1': 0.02 * 200,  # 2%
             'Flex': 0.10 * 200,  # 10%
-            'Bench': 0.06 * 200  # 6% for all bench slots
+            'BN1': 0.01 * 200,  # 1%
+            'BN2': 0.01 * 200,  # 1%
+            'BN3': 0.01 * 200,  # 1%
+            'BN4': 0.01 * 200,  # 1%
+            'BN5': 0.01 * 200,  # 1%
+            'BN6': 0.01 * 200   # 1%
         }
 
     # Zero-RB bias chases low ranked running-backs

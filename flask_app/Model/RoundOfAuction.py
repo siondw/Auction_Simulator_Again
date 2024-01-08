@@ -12,6 +12,7 @@ class RoundOfAuction:
     def start_bidding(self):
         # Initialize active bidders, excluding the human player
         active_bidders = set(self.teams) - {self.human_player}
+        print(active_bidders)
 
         new_bid_made = True
 
@@ -24,6 +25,9 @@ class RoundOfAuction:
             for team in list(active_bidders):  # Iterate over a copy of the set
                 if team == self.highest_bidder:
                     continue
+
+                if team.is_human:
+                    continue  # Skip the human player
 
                 bid = team.calculate_bid(self.player_nominated, self.current_bid)
                 if bid is not None and bid > self.current_bid:

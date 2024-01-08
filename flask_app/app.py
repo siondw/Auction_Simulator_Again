@@ -34,6 +34,7 @@ def handle_disconnect():
 def doSomething():
     print('Message Received!')
 
+
 @socketio.on('place_human_bid')
 def handle_human_bid(data):
     print("Received a bid:", data)  # This will print the received data

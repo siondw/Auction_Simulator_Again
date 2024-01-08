@@ -37,9 +37,15 @@ class SocketIOManager {
         this.socket.on('disconnect', () => {
             console.log('Disconnected from the server.');
         });
+
     }
 
     updateAuctionUI(data) {
+        print("Updating UI...");
+        
+        const CurrentBid_Text = document.getElementById('currentBid');
+        const HighestBidder_Text = document.getElementById('highestBidder');
+
         // Update your UI elements here
         // Example:
         CurrentBid_Text.setText("Current Bid: $" + data.current_bid);
@@ -47,18 +53,25 @@ class SocketIOManager {
     }
 
     handleNewRound(data) {
+    
+        const CurrentBid_Text = document.getElementById('currentBid');
+        const HighestBidder_Text = document.getElementById('highestBidder');
+        const NewPlayer_Text = document.getElementById('nominatedPlayer');
+        
+        
+
         // Logic for handling a new round
-        CurrentBid_Text.setText("Current Bid: $0");
-        HighestBidder_Text.setText("Highest Bidder: " + data.nominator);
-        NewPlayer_Text.setText("Player on Auction: " + data.player);
+        CurrentBid_Text.textContent = "Current Bid: $" + 1; // Assuming data.currentBid holds the bid value
+        HighestBidder_Text.textContent = "Highest Bidder: " + data.nominator;
+        NewPlayer_Text.textContent = "Player on Auction: " + data.player;
         this.user_max_bid = data.user_max;
-        storeValue('nominator', data.nominator);
+        localStorage.setItem('nominator', data.nominator);
     }
 
     promptNomination() {
         // Logic to show the modal or dropdown for player selection
         showAlert('Nominate a Player', 'info');
-        storeValue('isNominationEnabled', true);
+        localStorage.setItem('isNominationEnabled', true);
     }
 
     sendUserBid(bidAmount) {
@@ -68,12 +81,13 @@ class SocketIOManager {
 
     sendNomination(selectedPlayer) {
         this.socket.emit("player_nominated", { player: selectedPlayer });
-        storeValue('isNominationEnabled', false);
+        localStorage.setItem('isNominationEnabled', false);
     }
 
     startRound() {
+        console.log("Starting Round...")
         this.socket.emit("start_round");
-        console.log("Round Begun")
+        
     }
 
     passBid() {

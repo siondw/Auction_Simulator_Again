@@ -1,5 +1,4 @@
-from Model.Strategies.HUMAN import HumanStrategy
-
+from .Strategies.HUMAN import HumanStrategy
 
 class Team:
 

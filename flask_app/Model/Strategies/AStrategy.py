@@ -17,7 +17,12 @@ class Strategy(ABC):
             'WR3': 0 * 200,
             'TE1': 0 * 200,
             'Flex': 0 * 200,
-            'Bench': 0 * 200
+            'BN1': 0 * 200,
+            'BN2': 0 * 200,
+            'BN3': 0 * 200,
+            'BN4': 0 * 200,
+            'BN5': 0 * 200,
+            'BN6': 0 * 200,
         }
 
     def calculate_bid(self, team, player, current_bid):
@@ -68,11 +73,9 @@ class Strategy(ABC):
 
         # Iterate through the slots in order for the player's position
         for slot in slot_order[position]:
-            if slot.startswith('BN'):
-                ev = self.budget_allocation['Bench'] * self.team_budget / 6  # divide by the number of bench slots
-            else:
-                # Calculate the expected value for the slot based on the budget allocation
-                ev = self.budget_allocation[slot] * self.team_budget
+            
+            # Calculate the expected value for the slot based on the budget allocation
+            ev = self.budget_allocation[slot] * self.team_budget
 
             # Check if the slot is empty and the player's value is within the tolerance of the expected value
             if not roster[slot] and (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):
