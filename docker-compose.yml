@@ -19,16 +19,17 @@ services:
     # Map host port 8001 to container port 4000 (see the 
     # EXPOSE command in Dockerfile)
     ports:
-      - "8001:4000"
+      - "8001:4000"  # Flask port
+      - "5678:5678"  # Debugging port for debugpy
 
   ##################################################################
   # Configure the AppSmith container (borrowed directly from Appsmith)
-  appsmith:
-    image: index.docker.io/appsmith/appsmith-ce
-    container_name: appsmith
-    ports:
-      - "8080:80"
-      - "4443:443"
-    volumes:
-      - ./stacks:/appsmith-stacks
-    restart: unless-stopped
+  # appsmith:
+  #   image: index.docker.io/appsmith/appsmith-ce
+  #   container_name: appsmith
+  #   ports:
+  #     - "8080:80"
+  #     - "4443:443"
+  #   volumes:
+  #     - ./stacks:/appsmith-stacks
+  #   restart: unless-stopped

@@ -37,7 +37,15 @@ def doSomething():
 
 @socketio.on('place_human_bid')
 def handle_human_bid(data):
+    
+    league = current_app.league
+    
+    if not league:
+        print("League not initialized")
+
     print("Received a bid:", data)  # This will print the received data
+    auction = current_app.current_auction_round
+
     try:
         # Ensure the auction round is available
         auction = current_app.current_auction_round
@@ -47,14 +55,14 @@ def handle_human_bid(data):
 
         # Parse and validate bid amount
         bid_amount = int(data.get('bid_amount', 0))
-        human_team = current_app.League.get_human()
+        human_team = league.get_human()
 
         # Additional checks (like max bid)
         if bid_amount <= auction.current_bid:
             emit('bid_update', {'status': 'failed', 'message': 'Bid must be higher than current bid'})
             return
 
-        if bid_amount > human_team.max_bid:  # Assuming max_bid is a property of the team
+        if bid_amount > human_team.get_max_bid():  # Assuming max_bid is a property of the team
             emit('bid_update', {'status': 'failed', 'message': 'Bid exceeds your maximum allowed bid'})
             return
 
@@ -101,12 +109,15 @@ def handle_start_round():
 
 @socketio.on('pass_bid')
 def handle_pass_bid():
-    print("Pass Bid")
+
+    auction = current_app.current_auction_round
+    
+
     try:
-        auction = current_app.current_auction_round
         if not auction:
             raise ValueError("Auction round not available.")
-        auction.isHumanInterested = False
+        auction.set_isHumanInterested(False)
+        print("Pass Bid")
     except Exception as e:
         emit('error', {'message': str(e)})
             

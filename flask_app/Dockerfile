@@ -19,6 +19,7 @@ RUN pip install -r requirements.txt
 RUN pip install flask-socketio
 RUN pip install pandas
 RUN pip install flask-cors
+RUN pip install debugpy
 
 # expose port 4000 from the container
 EXPOSE 4000
@@ -26,4 +27,6 @@ EXPOSE 4000
 # tell the container to run the flask application
 # CMD ["python", "src/app.py"]
 CMD ["python", "app.py"]
+
+
 

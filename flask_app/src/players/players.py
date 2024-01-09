@@ -18,7 +18,7 @@ def get_players():
     sorted_players = sorted(players_data, key=lambda p: p.estimated_value, reverse=True)
     
     # Filter out players that have been drafted
-    filtered_players = filter(lambda p: not p.drafted, sorted_players)  # Notice the change here
+    filtered_players = filter(lambda p: not p.drafted, sorted_players) 
 
     
     players_jsons = []

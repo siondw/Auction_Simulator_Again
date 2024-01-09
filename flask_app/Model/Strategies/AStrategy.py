@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import numpy as np
 import random
+import math
 
 
 class Strategy(ABC):
@@ -48,9 +49,9 @@ class Strategy(ABC):
         if random.random() <= bias_bid and current_bid + 1 < max_bid_allowed:
             # Bid slightly higher than the current bid
             if current_bid < (player.get_value() / 2):
-                return player.get_value() / 2
+                return math.floor(player.get_value() / 2)
             else:
-                return current_bid + 1
+                return math.floor(current_bid + 1)
         else:
             return None  # Not willing to bid
 
@@ -75,7 +76,7 @@ class Strategy(ABC):
         for slot in slot_order[position]:
             
             # Calculate the expected value for the slot based on the budget allocation
-            ev = self.budget_allocation[slot] * self.team_budget
+            ev = self.budget_allocation[slot]
 
             # Check if the slot is empty and the player's value is within the tolerance of the expected value
             if not roster[slot] and (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):

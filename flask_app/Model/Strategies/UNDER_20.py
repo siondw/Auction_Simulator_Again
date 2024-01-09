@@ -24,4 +24,8 @@ class Under20Strategy(Strategy, ABC):
         }
 
     def bias(self, player, bid_probability, current_bid, team):
-        pass
+        if player.get_value() >= 20:
+            # Decrease the bid probability by 20%
+            bid_probability *= .8
+
+        return bid_probability

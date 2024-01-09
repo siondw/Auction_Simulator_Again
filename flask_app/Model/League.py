@@ -57,7 +57,7 @@ class League:
         self.set_nomination_order()
 
     def import_players(self):
-        self.players = PlayerImporter.import_players_from_csv("Resources/Players.csv")
+        self.players = PlayerImporter.import_players_from_csv("flask_app/Resources/Players.csv")
         self.player_dict = {player.name: player for player in self.players}
 
 
@@ -156,7 +156,7 @@ class League:
             
             # The weights must correspond to the total number of available players
             # The top players get higher weight
-            weights = [0.6] * top_players_count + [0.4] * (len(available_players) - top_players_count)
+            weights = [0.9] * top_players_count + [0.1] * (len(available_players) - top_players_count)
 
             # Randomly select a player from the list of available players
             # with a bias toward the top players at each position

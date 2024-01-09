@@ -1,8 +1,8 @@
 // script.js
 class SocketIOManager {
     constructor() {
-        this.socket = io('http://localhost:8001'); // Adjust the URL
-        this.user_max_bid = 185;
+        this.socket = io('http://localhost:4000'); // Adjust the URL
+        this.user_max_bid = 186;
     }
 
     initialize() {
@@ -18,6 +18,11 @@ class SocketIOManager {
             // Example: Update UI elements with received data
             this.updateAuctionUI(data);
         });
+
+        this.socket.on('round_over', () => {
+            this.endRound();
+        });
+        
 
         this.socket.on('new_round', (data) => {
             // Handle new round logic
@@ -41,15 +46,15 @@ class SocketIOManager {
     }
 
     updateAuctionUI(data) {
-        print("Updating UI...");
-        
         const CurrentBid_Text = document.getElementById('currentBid');
         const HighestBidder_Text = document.getElementById('highestBidder');
 
         // Update your UI elements here
         // Example:
-        CurrentBid_Text.setText("Current Bid: $" + data.current_bid);
-        HighestBidder_Text.setText("Highest Bidder: " + data.highest_bidder);
+        CurrentBid_Text.textContent = ("Current Bid: $" + data.current_bid);
+        HighestBidder_Text.textContent = ("Highest Bidder: " + data.highest_bidder);
+
+        updateBidInput();
     }
 
     handleNewRound(data) {
@@ -74,9 +79,35 @@ class SocketIOManager {
         localStorage.setItem('isNominationEnabled', true);
     }
 
-    sendUserBid(bidAmount) {
-        // Validation and sending bid logic
-        // Similar to your existing code
+    sendUserBid() {
+        const CurrentBid_Text = document.getElementById('currentBid');
+
+        // Retrieve the bid amount from the UserBidInput widget
+        let bidAmount = bidInput.value;
+
+        // Retrieve the current bid from the CurrentBid_Text widget
+        let currentBid = parseInt(CurrentBid_Text.textContent.replace(/[^0-9]/g, ''));
+
+        // Retrieve the user's max bid (assuming it's been stored in the UserMaxBid variable)
+        let userMaxBid = this.user_max_bid;
+
+        // Validate the bid amount
+        if (isNaN(bidAmount)) {
+            alert('Please enter a valid bid amount.', 'error');
+            return;
+        }
+        if (bidAmount <= currentBid) {
+            alert('Your bid must be higher than the current bid.', 'error');
+            return;
+        }
+        if (bidAmount > userMaxBid) {
+            alert(`Your bid cannot be higher than your max bid of $${userMaxBid}.`, 'error');
+            return;
+        }
+
+        // Send the bid to the server
+        this.socket.emit('place_human_bid', { bid_amount: bidAmount });
+        console.log("Bid Placed: " + bidAmount);
     }
 
     sendNomination(selectedPlayer) {
@@ -93,6 +124,26 @@ class SocketIOManager {
     passBid() {
         this.socket.emit("pass_bid");
     }
+
+    endRound() {
+        const CurrentBid_Text = document.getElementById('currentBid');
+        const HighestBidder_Text = document.getElementById('highestBidder');
+        const NewPlayer_Text = document.getElementById('nominatedPlayer');
+        const startRoundButton = document.getElementById('startRound');
+        const inputBid = document.getElementById('bidInput');
+
+        CurrentBid_Text.textContent = "Current Bid: "; // Assuming data.currentBid holds the bid value
+        
+        HighestBidder_Text.textContent = "Highest Bidder: " ;
+        NewPlayer_Text.textContent = "Player on Auction: " ;
+        inputBid.value = 1;
+
+        fetchPlayersAndSetupApp();
+
+        startRoundButton.classList.remove('gray-button'); // Reset the color back to blue
+        startRoundButton.disabled = false; // Enable the button again
+
+    }
 }
 
 
@@ -105,6 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const draftStarted = localStorage.getItem('draftStarted');
     const socket = new SocketIOManager();
     socket.initialize();
+
 
 
     if (draftStarted) {
@@ -125,18 +177,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Attach an event listener to the "Start Round" button
         startRoundButton.addEventListener('click', () => {
-            // Call the startRound method when the button is clicked
-            socket.startRound();
-    
+            // Add the CSS class 'gray-button' to color the button gray
+            startRoundButton.classList.add('gray-button'); 
             // Optionally disable the button after starting the round to prevent multiple clicks
             startRoundButton.disabled = true;
+            
+            
+            // Call the startRound method when the button is clicked
+            socket.startRound();
+
+            
         });
+
+        document.getElementById('resetButton').addEventListener('click', function() {
+            restartDraft();
+        
+            if(socket){
+                socket.disconnect();
+            }
+        });
+        
+        document.getElementById('passButton').addEventListener('click', function() {
+            socket.passBid();
+        });
+
+        document.getElementById('bidButton').addEventListener('click', function() {
+            socket.sendUserBid();
+        });
+
+        
 });
 
 
 
 function startDraft() {
-    fetch('http://localhost:8001/start-draft')
+    fetch('http://localhost:4000/start-draft')
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -162,7 +237,7 @@ function startDraft() {
 
 function fetchPlayersAndSetupApp() {
     // Fetch data from API to populate the table
-    fetch('http://localhost:8001/p/players')
+    fetch('http://localhost:4000/p/players')
         .then(response => response.json())
         .then(data => {
             populateTable(data);
@@ -173,7 +248,7 @@ function fetchPlayersAndSetupApp() {
 }
 
 function fetchNominationOrder() {
-    fetch('http://localhost:8001/t/get-team-names')
+    fetch('http://localhost:4000/t/get-team-names')
         .then(response => response.json())
         .then(teamNames => {
             const list = document.getElementById('nominationOrderList');
@@ -267,21 +342,20 @@ function filterTableByPosition(position) {
     }
 }
 
-document.getElementById('resetButton').addEventListener('click', function() {
-    restartDraft();
+function setUpButtonHandlers() {
+    
+}
 
-    if(socket){
-        socket.disconnect();
-    }
-});
 
 function updateBidInput() {
     const currentBidSpan = document.getElementById('currentBid');
     const bidInput = document.getElementById('bidInput');
 
-    let currentBid = parseInt(currentBidSpan.textContent);
+    let currentBid = parseInt(currentBidSpan.textContent.replace(/[^0-9]/g, ''));
 
-    bidInput.value = currentBid + 1;
+    currentInput = currentBid + 1;
+
+    bidInput.value = currentInput;
 }
 
 

@@ -53,6 +53,7 @@ html, body {
     background-color: #45a049; /* Darker green on hover */
 }
 
+
 /* Hidden class for welcome screen */
 .welcome-screen.hidden {
     display: none;
@@ -115,6 +116,12 @@ html, body {
 #startRound:hover {
     background-color: #65acea;
 }
+
+#startRound.gray-button {
+    background-color: gray;
+    color: white;
+}
+
 
 
 #draftLogicContainer {
