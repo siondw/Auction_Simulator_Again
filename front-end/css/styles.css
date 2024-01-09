@@ -274,6 +274,12 @@ html, body {
     /* width: 200px; Uncomment this if you want a specific width */
 }
 
+#nominationOrderList li.current-nominator {
+    background-color: rgba(255, 215, 0, 0.8);
+    box-shadow: 0px 4px 8px rgba(255, 215, 0, 0.8);
+}
+
+
 #nominationOrderList {
     list-style: none; /* Removes default list item styling */
     padding: 0; /* Resets any default padding */

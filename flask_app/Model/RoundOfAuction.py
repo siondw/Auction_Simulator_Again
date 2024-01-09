@@ -44,7 +44,7 @@ class RoundOfAuction:
                 
                 if bid is not None and bid > self.current_bid:
                     self.process_bid(team, bid)
-                    time.sleep(.3)
+                    time.sleep(1)
                     self.highest_bidder = team  # Update the highest bidder
                     new_bid_made = True  # A new bid was made, continue the loop
                 else:

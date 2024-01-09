@@ -83,6 +83,26 @@ class SocketIOManager {
         NewPlayer_Text.textContent = "Player on Auction: " + data.player;
         this.user_max_bid = data.user_max;
         localStorage.setItem('nominator', data.nominator);
+
+        this.highlightCurrentNominator(data.nominator);
+    }
+
+    highlightCurrentNominator(nominator) {
+        // Remove highlighting from all teams
+        const teams = document.querySelectorAll('#nominationOrderList li');
+        teams.forEach(team => {
+            team.classList.remove('current-nominator');
+        });
+
+        // Strip away "Team " from the nominator string to get the team number
+        let teamNumber = nominator.replace('Team ', '');
+
+        // Add highlighting to the current nominator
+        const currentNominatorItem = document.getElementById(teamNumber);
+        if (currentNominatorItem) {
+            currentNominatorItem.classList.add('current-nominator');
+            console.log("Applied current-nominator to:", currentNominatorItem);
+        }
     }
 
     promptNomination() {
