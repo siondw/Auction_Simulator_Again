@@ -207,6 +207,11 @@ html, body {
     background-color: #45a049;
 }
 
+#bidButton:disabled {
+    background-color: gray;
+    color: white;
+}
+
 #passButton {
     flex: 1;
     cursor: pointer;

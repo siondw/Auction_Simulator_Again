@@ -48,6 +48,18 @@ class SocketIOManager {
     updateAuctionUI(data) {
         const CurrentBid_Text = document.getElementById('currentBid');
         const HighestBidder_Text = document.getElementById('highestBidder');
+        const bidButton = document.getElementById('bidButton');
+
+        if (data.highest_bidder === "Team 1") {
+            // Add the CSS class 'gray-button' to color the button gray
+            bidButton.classList.add('disabled'); 
+            // Optionally disable the button after starting the round to prevent multiple clicks
+            bidButton.disabled = true;
+            
+        } else {
+            bidButton.classList.remove('disabled'); // Reset the color back to blue
+            bidButton.disabled = false; // Enable the button again
+        }
 
         // Update your UI elements here
         // Example:
