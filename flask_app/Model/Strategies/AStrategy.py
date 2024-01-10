@@ -74,19 +74,27 @@ class Strategy(ABC):
 
         # Iterate through the slots in order for the player's position
         for slot in slot_order[position]:
-            
             # Calculate the expected value for the slot based on the budget allocation
             ev = self.budget_allocation[slot]
 
-            # Check if the slot is empty and the player's value is within the tolerance of the expected value
-            if not roster[slot] and (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):
-                # If so, return the slot
-                return slot
+            # Check if the slot is empty
+            if not roster[slot]:
+                # Prioritize bench slots for significantly lower-value players
+                if 'BN' in slot and player_value < (ev - ev * tolerance):
+                    print(slot)
+                    return slot
 
-        # If no suitable slot was found in the first pass, find the first empty slot regardless of value
+                # Check if the player's value is within the tolerance of the expected value
+                elif (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):
+                    print(slot)
+                    return slot
+
+        # Fallback: find the first empty slot regardless of value
         for slot in slot_order[position]:
             if not roster[slot]:
+                print(slot)
                 return slot
+
 
         # If no empty slot is found, return None
         return None

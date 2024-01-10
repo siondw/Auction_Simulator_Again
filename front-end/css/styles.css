@@ -432,7 +432,7 @@ html, body {
 #roundSummariesList {
     list-style: none;
     padding: 0;
-    max-height: calc(100vh - 40px); /* Viewport height minus some margin */
+    max-height: calc(100vh - 300px); /* Viewport height minus some margin */
     overflow-y: auto; /* Enables vertical scrolling */
     background-color: #4CAF50; /* Background color */
     border-radius: 20px; /* Rounded corners */

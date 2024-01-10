@@ -149,6 +149,7 @@ class SocketIOManager {
 
     sendNomination(selectedPlayer) {
         this.socket.emit("player_nominated", { player: selectedPlayer });
+        draftLogicContainer.classList.remove('glowing-gold');
         localStorage.setItem('isNominationEnabled', false);
     }
 
@@ -324,12 +325,20 @@ function fetchRoundSummaries() {
                 const listItem = document.createElement('li');
                 listItem.textContent = summary; // Adjust if summary structure is different
                 list.appendChild(listItem);
+                scrollToBottom();
             });
         })
         .catch(error => {
             console.error('Error fetching round summaries:', error);
         });
 }
+
+function scrollToBottom() {
+    const list = document.getElementById('roundSummariesList');
+    console.log("Tried scroling")
+    list.scrollTop = list.scrollHeight;
+}
+
 
 
 // Function to populate the table with player data

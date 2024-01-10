@@ -1,11 +1,12 @@
 import unittest
 from flask_app.Model.Strategies.HUMAN import HumanStrategy
+from flask_app.Model.Strategies.BALANCED import BalancedStrategy
 from flask_app.Model.Team import Team
 from flask_app.Model.Player import Player
 
 class TestTeam(unittest.TestCase):
     def setUp(self):
-        self.team = Team("Testers", HumanStrategy(200))
+        self.team = Team("Testers", BalancedStrategy(200))
         self.player1 = Player(
             name="Tom Brady",
             pos="QB",
@@ -21,6 +22,22 @@ class TestTeam(unittest.TestCase):
             projected_points=280,
             estimated_value=35,
             positional_rank=2
+        )
+        self.player3 = Player(
+            name="John Metchie",
+            pos="WR",
+            nfl_team="HOU",
+            projected_points=43,
+            estimated_value=2,
+            positional_rank=56
+        )
+        self.player4 = Player(
+            name="Jaylen Waddle",
+            pos="WR",
+            nfl_team="MIA",
+            projected_points=231,
+            estimated_value=20,
+            positional_rank=16
         )
 
     def test_add_player(self):
@@ -42,9 +59,10 @@ class TestTeam(unittest.TestCase):
     def test_determine_slot(self):
         slot = self.team.determine_slot(self.player1)
         self.assertEqual(slot, 'QB1')
-
-    def test_is_human(self):
-        self.assertTrue(self.team.is_human())
+        slot = self.team.determine_slot(self.player3)
+        self.assertEqual(slot, 'BN1')
+        slot = self.team.determine_slot(self.player4)
+        self.assertEqual(slot, 'WR2')
 
     def test_set_strategy(self):
         new_strategy = HumanStrategy(100)
