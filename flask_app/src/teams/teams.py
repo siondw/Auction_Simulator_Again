@@ -27,8 +27,11 @@ def get_team_roster(team_id):
 @teams.route('get-team-names', methods=['GET'])
 def get_team_names():
     league = current_app.league
+    nom_order = league.nomination_order
+    teams = []
 
-    teams = league.get_team_names()
+    for team in nom_order:
+        teams.append(team.name)
 
     return jsonify(teams)
 

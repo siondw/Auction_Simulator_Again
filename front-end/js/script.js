@@ -106,8 +106,13 @@ class SocketIOManager {
     }
 
     promptNomination() {
-        // Logic to show the modal or dropdown for player selection
-        showAlert('Nominate a Player', 'info');
+
+        const NewPlayer_Text = document.getElementById('nominatedPlayer');
+        const draftLogicContainer = document.getElementById('draftLogicContainer');
+
+        draftLogicContainer.classList.add('glowing-gold');
+
+        NewPlayer_Text.textContent = "Your Turn to Nominate a Player!";
         localStorage.setItem('isNominationEnabled', true);
     }
 
@@ -171,6 +176,7 @@ class SocketIOManager {
         inputBid.value = 1;
 
         fetchPlayersAndSetupApp();
+        fetchRoundSummaries();
 
         startRoundButton.classList.remove('gray-button'); // Reset the color back to blue
         startRoundButton.disabled = false; // Enable the button again
@@ -197,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Continue with the application setup
         fetchPlayersAndSetupApp();
         fetchNominationOrder();
+        fetchRoundSummaries();
     } else {
         // Show the welcome screen
         document.getElementById('welcomeScreen').style.display = 'block';
@@ -237,6 +244,10 @@ document.addEventListener('DOMContentLoaded', () => {
             socket.sendUserBid();
         });
 
+        window.nominatePlayer = function(playerName) {
+            socket.sendNomination(playerName);
+        };
+
         
 });
 
@@ -264,6 +275,7 @@ function startDraft() {
     });
 
     localStorage.setItem('draftStarted', true);
+    localStorage.setItem('isNominationEnabled', false);
 }
 
 
@@ -285,6 +297,7 @@ function fetchNominationOrder() {
         .then(teamNames => {
             const list = document.getElementById('nominationOrderList');
             teamNames.forEach(teamName => {
+                console.log('Team name:', teamName);
                 const listItem = document.createElement('li');
                 listItem.textContent = teamName;
 
@@ -300,6 +313,23 @@ function fetchNominationOrder() {
         });
 }
 
+function fetchRoundSummaries() {
+    fetch('http://localhost:4000/get-round-summaries/')
+        .then(response => response.json())
+        .then(summaries => {
+            const list = document.getElementById('roundSummariesList');
+            list.innerHTML = ''; // Clear existing list items
+
+            summaries.forEach(summary => {
+                const listItem = document.createElement('li');
+                listItem.textContent = summary; // Adjust if summary structure is different
+                list.appendChild(listItem);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching round summaries:', error);
+        });
+}
 
 
 // Function to populate the table with player data
@@ -311,7 +341,7 @@ function populateTable(players) {
     players.forEach(player => {
         let row = tableBody.insertRow();
         row.innerHTML = `
-            <td><button onclick="nominatePlayer('${player.name}')">Nominate</button></td>
+            <td><button onclick="window.nominatePlayer('${player.name}')">Nominate</button></td>
             <td>${player.name}</td>
             <td>${player.estimated_value}</td>
             <td>${player.pos}</td>
@@ -322,11 +352,6 @@ function populateTable(players) {
 }
 
 
-  // Function to handle player nomination
-  function nominatePlayer(playerName) {
-    console.log('Player nominated:', playerName);
-    // Add logic to handle nomination
-}
 
 // Function to filter the table
 function searchTable() {

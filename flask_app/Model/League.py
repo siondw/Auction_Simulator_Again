@@ -94,7 +94,8 @@ class League:
 
         if nominating_team.name == "Team 1":  # Human team
             # For the human team, the round will continue after user input
-            # So, exit the method here
+            emit('prompt_nomination', {'message': 'Please nominate a player.'})
+            # And then exit the method here and wait for the human to nominate a player
             return
 
         # Get Player from Player Nominate method
@@ -137,13 +138,16 @@ class League:
         return None
 
     def set_nomination_order(self):
-        self.nomination_order = random.shuffle(self.teams)
+        random.shuffle(self.teams)
+        self.nomination_order = self.teams.copy()
+        
         
         
 
     def nominate_player(self, team):
         if team.name == "Team 1":  # Human team
             emit('prompt_nomination', {'message': 'Please nominate a player.'})
+            print("Waiting for user input")
             # Rest of the logic will be handled after user input
             return None
         else:

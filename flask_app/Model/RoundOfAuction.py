@@ -44,7 +44,7 @@ class RoundOfAuction:
                 
                 if bid is not None and bid > self.current_bid:
                     self.process_bid(team, bid)
-                    time.sleep(1)
+                    time.sleep(.3)
                     self.highest_bidder = team  # Update the highest bidder
                     new_bid_made = True  # A new bid was made, continue the loop
                 else:
@@ -77,7 +77,8 @@ class RoundOfAuction:
         
 
     def summarize_round(self):
-        summary = f"Player: {self.player_nominated.name}, Winning Team: {self.highest_bidder.name}, Bid: {self.current_bid}"
+        
+        summary = f"{self.player_nominated.name} sold to {self.highest_bidder.name} for ${self.current_bid}"
         return summary
     
     def set_isHumanInterested(self, value):

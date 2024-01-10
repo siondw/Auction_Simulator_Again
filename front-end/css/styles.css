@@ -122,7 +122,22 @@ html, body {
     color: white;
 }
 
+@keyframes glow {
+    0%, 100% { 
+        box-shadow: 0 0 10px 5px #45a049; /* More subtle glow */
+    }
+    50% { 
+        box-shadow: 0 0 20px 10px #45a049; /* Brighter glow */
+    }
+}
 
+
+#draftLogicContainer.glowing-gold {
+    transition: all .8s ease-in-out;
+    background-color: #45a049;
+    box-shadow: 0 0 30px 10px #45a049; /* Inner glow */
+    animation: glow 3s infinite ease-in-out;
+}
 
 #draftLogicContainer {
     display: flex;
@@ -401,6 +416,42 @@ html, body {
     border: 1px solid #ddd;
     height: 35px;
 }
+
+#roundSummariesContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;  /* Stack children vertically */
+    justify-content: center;
+    align-items: center;
+    max-width: 100%; /* Ensure it fits in the flex item */
+    padding: 10px;
+    box-sizing: border-box; /* Include padding in width calculation */
+    margin-left: 20px; 
+}
+
+#roundSummariesList {
+    list-style: none;
+    padding: 0;
+    max-height: calc(100vh - 40px); /* Viewport height minus some margin */
+    overflow-y: auto; /* Enables vertical scrolling */
+    background-color: #4CAF50; /* Background color */
+    border-radius: 20px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Optional: Box shadow for effect */
+    padding: 10px;
+    margin: auto; /* Centers the element horizontally */
+    display: block; /* Required for margin: auto to work */
+}
+#roundSummariesList li {
+    background-color: rgba(128, 128, 128, 0.5); /* Light and opaque gray background color for each item */
+    color: whitesmoke; /* Text color */
+    margin: 5px 0;
+    padding: 5px 10px;
+    border-radius: 10px; /* Rounded corners for items */
+    border: whitesmoke;
+    border-style: solid;
+    border-width: 2px;
+}
+
 
 
 

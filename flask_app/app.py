@@ -138,10 +138,20 @@ def start_draft():
     current_app.league.import_players()  
 
     # Set nomination order
-    current_app.league.set_nomination_order
+    # current_app.league.set_nomination_order
 
     # Since no data needs to be returned, just send a confirmation response
     return jsonify({'message': 'Draft initialized successfully'}), 200
+
+@app.route('/get-round-summaries/', methods=['GET'])
+def get_summaries():
+
+    league = current_app.league
+    
+    if not league:
+        return jsonify({'message': 'League not initialized'}), 500
+
+    return jsonify(league.round_summaries), 200
 
 
 if __name__ == '__main__':
