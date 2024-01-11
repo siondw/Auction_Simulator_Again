@@ -7,6 +7,7 @@ from flask_app.Model.Player import Player
 class TestTeam(unittest.TestCase):
     def setUp(self):
         self.team = Team("Testers", BalancedStrategy(200))
+
         self.player1 = Player(
             name="Tom Brady",
             pos="QB",
@@ -36,9 +37,18 @@ class TestTeam(unittest.TestCase):
             pos="WR",
             nfl_team="MIA",
             projected_points=231,
-            estimated_value=20,
+            estimated_value=23,
             positional_rank=16
         )
+        self.player5 = Player(
+            name="Brandon Aiyuk",
+            pos="WR",
+            nfl_team="SF",
+            projected_points=231,
+            estimated_value=6,
+            positional_rank=22
+        )
+
 
     def test_add_player(self):
         self.team.add_player(self.player1, 50, 'QB1')
@@ -63,6 +73,8 @@ class TestTeam(unittest.TestCase):
         self.assertEqual(slot, 'BN1')
         slot = self.team.determine_slot(self.player4)
         self.assertEqual(slot, 'WR2')
+        slot = self.team.determine_slot(self.player5)
+        slot.assertEqual(slot, 'BN1')
 
     def test_set_strategy(self):
         new_strategy = HumanStrategy(100)

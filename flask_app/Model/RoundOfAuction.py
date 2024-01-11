@@ -47,9 +47,17 @@ class RoundOfAuction:
                     time.sleep(.3)
                     self.highest_bidder = team  # Update the highest bidder
                     new_bid_made = True  # A new bid was made, continue the loop
-                else:
+                #else:
                     # Remove the team from active bidders if they choose not to bid
-                    active_bidders.remove(team)
+                    #active_bidders.remove(team)
+                
+
+                
+            if not new_bid_made and self.isHumanInterested:
+                if self.highest_bidder == self.human_player:
+                    break
+                time.sleep(3)  # Delay for 2 seconds (adjust as needed)
+                print("im really trippin")
 
            
 

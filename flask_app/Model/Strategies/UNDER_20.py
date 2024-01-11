@@ -18,9 +18,9 @@ class Under20Strategy(Strategy, ABC):
             'BN1': 6.00 * 2,
             'BN2': 5.00 * 2,
             'BN3': 8.00 * 2,
-            'BN4': 1.50 * 2,
-            'BN5': 2.50 * 2,
-            'BN6': 1.00 * 2
+            'BN4': 2.50 * 2,
+            'BN5': 2.00 * 2,
+            'BN6': 0.50 * 2
         }
 
     def bias(self, player, bid_probability, current_bid, team):

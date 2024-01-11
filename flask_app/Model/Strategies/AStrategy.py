@@ -37,6 +37,11 @@ class Strategy(ABC):
 
         # Get the maximum budget for the slot
         max_bid_for_slot = self.budget_allocation[slot]
+
+        if max_bid_for_slot == 1:
+            if current_bid > 1:
+                return None
+
         max_bid_allowed = team.get_max_bid()
 
         # Calculate the probability of placing a bid
@@ -79,22 +84,16 @@ class Strategy(ABC):
 
             # Check if the slot is empty
             if not roster[slot]:
-                # Prioritize bench slots for significantly lower-value players
-                if 'BN' in slot and player_value < (ev - ev * tolerance):
+                # Check if the player's value is above the minimum tolerance for the slot
+                if player_value >= (ev - ev * tolerance):
                     print(slot)
-                    return slot
-
-                # Check if the player's value is within the tolerance of the expected value
-                elif (ev - ev * tolerance) <= player_value <= (ev + ev * tolerance):
-                    print(slot)
-                    return slot
+                    return slot  # Assign to this slot
 
         # Fallback: find the first empty slot regardless of value
         for slot in slot_order[position]:
             if not roster[slot]:
                 print(slot)
                 return slot
-
 
         # If no empty slot is found, return None
         return None

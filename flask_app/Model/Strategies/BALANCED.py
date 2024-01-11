@@ -8,15 +8,15 @@ class BalancedStrategy(Strategy, ABC):
     def __init__(self, team_budget):
         super().__init__(team_budget)
         self.budget_allocation = {
-            'QB1': 0.085 * 200,
-            'QB2': 0.075 * 200,
-            'WR1': 0.145 * 200,
-            'WR2': 0.07 * 200,
-            'WR3': 0.095 * 200,
+            'QB1': 0.11 * 200,
+            'QB2': 0.07 * 200,
+            'WR1': 0.20 * 200,
+            'WR2': 0.13 * 200,
+            'WR3': 0.05 * 200,
             'RB1': 0.19 * 200,
-            'RB2': 0.195 * 200,
+            'RB2': 0.08 * 200,
             'TE1': 0.02 * 200,
-            'Flex': 0.06 * 200,
+            'Flex': 0.085 * 200,
             'BN1': 0.04 * 200,
             'BN2': 0.005 * 200,
             'BN3': 0.005 * 200,

@@ -74,10 +74,10 @@ class SocketIOManager {
         const CurrentBid_Text = document.getElementById('currentBid');
         const HighestBidder_Text = document.getElementById('highestBidder');
         const NewPlayer_Text = document.getElementById('nominatedPlayer');
-        
-        
+
 
         // Logic for handling a new round
+        
         CurrentBid_Text.textContent = "Current Bid: $" + 1; // Assuming data.currentBid holds the bid value
         HighestBidder_Text.textContent = "Highest Bidder: " + data.nominator;
         NewPlayer_Text.textContent = "Player on Auction: " + data.player;
@@ -169,6 +169,7 @@ class SocketIOManager {
         const NewPlayer_Text = document.getElementById('nominatedPlayer');
         const startRoundButton = document.getElementById('startRound');
         const inputBid = document.getElementById('bidInput');
+        const passButton = document.getElementById('passButton');
 
         CurrentBid_Text.textContent = "Current Bid: "; // Assuming data.currentBid holds the bid value
         
@@ -181,6 +182,8 @@ class SocketIOManager {
 
         startRoundButton.classList.remove('gray-button'); // Reset the color back to blue
         startRoundButton.disabled = false; // Enable the button again
+        passButton.classList.remove('gray-button');
+        passButton.textContent = "Pass";
 
     }
 }
@@ -238,6 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         document.getElementById('passButton').addEventListener('click', function() {
+            const passButton = document.getElementById('passButton');
+
+            passButton.classList.add('gray-button');
+            passButton.textContent = "Passed";
             socket.passBid();
         });
 
