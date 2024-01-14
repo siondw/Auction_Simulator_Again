@@ -53,7 +53,7 @@ class Strategy(ABC):
         # Decide whether to place a bid
         if random.random() <= bias_bid and current_bid + 1 < max_bid_allowed:
             # Bid slightly higher than the current bid
-            if current_bid < (player.get_value() / 2):
+            if current_bid < (math.floor(player.get_value() / 2)):
                 return math.floor(player.get_value() / 2)
             else:
                 return math.floor(current_bid + 1)
@@ -86,13 +86,11 @@ class Strategy(ABC):
             if not roster[slot]:
                 # Check if the player's value is above the minimum tolerance for the slot
                 if player_value >= (ev - ev * tolerance):
-                    print(slot)
                     return slot  # Assign to this slot
 
         # Fallback: find the first empty slot regardless of value
         for slot in slot_order[position]:
             if not roster[slot]:
-                print(slot)
                 return slot
 
         # If no empty slot is found, return None

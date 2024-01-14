@@ -12,17 +12,25 @@ def get_team_roster(team_id):
     league = current_app.league
 
     team_name = f"Team {team_id}"
+    team_roster = league.get_team_roster(team_name)  # Retrieve the team object
 
-    team_roster = league.get_team_roster(team_name)
+    if not team_roster:
+        # Handle case where team is not found
+        return jsonify({'error': 'Team not found'}), 404
 
-    if all(player is None for player in team_roster.values()):
-        # Return a message indicating the roster is empty
-        empty_roster = [{"name": None, "position": None, "other_attributes": None} for _ in range(17)]
-        return jsonify(empty_roster), 200
+    # team_roster = team.get_roster()  # Retrieve the roster using get_roster method
 
-    roster_dicts = [player.to_dict() for player in team_roster]
+    formatted_roster = []
+    for slot, player in team_roster.items():
+        if player is not None:
+            player_data = {'name': player.get_name(), 'slot': slot}
+        else:
+            player_data = {'name': 'Empty', 'slot': slot}
 
-    return jsonify(roster_dicts)
+        formatted_roster.append(player_data)
+
+    return jsonify(formatted_roster)
+
 
 @teams.route('get-team-names', methods=['GET'])
 def get_team_names():

@@ -9,6 +9,7 @@ from Model.Strategies.QB_Heavy import QBHeavyStrategy
 from Model.Strategies.TOP_HEAVY import TopHeavyStrategy
 from Model.Strategies.UNDER_20 import Under20Strategy
 from Model.Strategies.ZERO_RB import ZeroRBStrategy
+from Model.Strategies.KELCE import KelceStrategy
 from Model.Team import Team
 from flask import current_app
 from flask_socketio import emit
@@ -24,6 +25,20 @@ class League:
         self.round_summaries = []
         self.nomination_order = []
         
+        # Strategy caps
+        strategy_caps = {
+            BalancedStrategy: float('inf'),  # No cap
+            Under20Strategy: 1,
+            QBHeavyStrategy: 2,
+            TopHeavyStrategy: 2,
+            ZeroRBStrategy: 2,
+            HeroRBStrategy: 3,
+            KelceStrategy: 2
+        }
+
+        # Initialize strategy usage counters
+        strategy_usage = {strategy: 0 for strategy in strategy_caps}
+
 
         # Define the available strategies and corresponding weights
         strategies = [
@@ -32,9 +47,10 @@ class League:
             QBHeavyStrategy,
             TopHeavyStrategy,
             ZeroRBStrategy,
-            HeroRBStrategy
+            HeroRBStrategy,
+            KelceStrategy
         ]
-        strategy_weights = [0.5, 0.05, 0.05, 0.085, 0.085, 0.2]
+        strategy_weights = [0.5, 0.05, 0.05, 0.05, 0.085, 0.2, .035]
 
         # Field for the Human Team to make retreival easier
         self.human_team = None
@@ -46,13 +62,19 @@ class League:
 
         # Create the remaining computer-controlled teams
         for i in range(1, num_teams):
-            # Choose a strategy randomly, based on the given weights
-            chosen_strategy_class = random.choices(strategies, strategy_weights)[0]
-            chosen_strategy = chosen_strategy_class(team_budget=200)
+            # Adjust strategies and weights based on usage
+            available_strategies = [s for s in strategies if strategy_usage[s] < strategy_caps[s]]
+            adjusted_weights = [strategy_weights[strategies.index(s)] for s in available_strategies]
+
+            # Choose a strategy randomly from the available strategies
+            chosen_strategy_class = random.choices(available_strategies, adjusted_weights)[0]
+            strategy_usage[chosen_strategy_class] += 1  # Increment
 
             # Create the team with the chosen strategy
-            team = Team(name=f"Team {i + 1}", strategy=chosen_strategy)
+            team_name = f"Team {i + 1}"
+            team = Team(name=team_name, strategy=chosen_strategy_class(team_budget=200))
             self.teams.append(team)
+
 
         self.set_nomination_order()
 
@@ -134,7 +156,7 @@ class League:
     def get_team_roster(self, team_name):
         for team in self.teams:
             if team.name == team_name:
-                return team.roster
+                return team.get_roster()
         return None
 
     def set_nomination_order(self):
@@ -151,21 +173,21 @@ class League:
             # Rest of the logic will be handled after user input
             return None
         else:
-            # Filter out drafted players
+                
             available_players = [player for player in self.players if not player.drafted]
-            
-            # Consider top 15 players at each position among the available players
-            top_players_count = min(15, len(available_players))  # Ensures we do not exceed the available players count
-            top_players = sorted(available_players, key=lambda x: x.positional_rank)[:top_players_count]
-            
-            # The weights must correspond to the total number of available players
-            # The top players get higher weight
-            weights = [0.9] * top_players_count + [0.1] * (len(available_players) - top_players_count)
 
-            # Randomly select a player from the list of available players
-            # with a bias toward the top players at each position
-            player_nominated = random.choices(available_players, weights=weights, k=1)[0]
-            
+            # Filter and take top players based on position
+            top_qbs = sorted([player for player in available_players if player.pos == 'QB'], key=lambda x: x.positional_rank)[:20]
+            top_wrs = sorted([player for player in available_players if player.pos == 'WR'], key=lambda x: x.positional_rank)[:35]
+            top_rbs = sorted([player for player in available_players if player.pos == 'RB'], key=lambda x: x.positional_rank)[:25]
+            top_tes = sorted([player for player in available_players if player.pos == 'TE'], key=lambda x: x.positional_rank)[:5]
+
+            # Combine all top players into a single list
+            top_players = top_qbs + top_wrs + top_rbs + top_tes
+
+            # Randomly select a player from the top players list
+            player_nominated = random.choice(top_players) 
+
         print(player_nominated)
         return player_nominated
 

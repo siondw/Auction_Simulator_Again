@@ -100,4 +100,7 @@ class Team:
     
     def get_name(self):
         return self.name
+    
+    def get_roster(self):
+        return self.roster
 

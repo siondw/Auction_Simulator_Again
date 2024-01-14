@@ -31,6 +31,8 @@ class BalancedStrategy(Strategy, ABC):
 
         # If the current bid is less than the player's estimated value, increase bid probability
         if current_bid < estimated_value:
-            return bid_probability * random.uniform(1, 1.2)  # increase by 0% to 20% randomly
+            return bid_probability * random.uniform(1, 1.4)  # increase by 0% to 20% randomly
+        if player.get_name == 'Travis Kelce' and current_bid < 37:
+            return bid_probability * 1.85
         else:
             return bid_probability  # do not increase bid probability

@@ -282,6 +282,8 @@ html, body {
     align-items: flex-start; /* Align items to the top */
 }
 
+  
+
 #nominationOrder {
     flex: 0 0 auto; /* Don't grow or shrink, but be automatically sized by content */
     margin-left: 20px;
@@ -315,6 +317,103 @@ html, body {
     transition: background-color 0.3s, transform 0.3s;
 }
 
+#teamSelectContainer {
+    display: flex;
+    justify-content: space-between; /* Pushes children to the edges */
+    align-items: center; /* Vertically centers children */
+    margin-bottom: 20px;
+    border: 1px solid #f4f4f4; /* Add a thin border */
+    border-radius: 5px; /* Round the corners */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15); /* Add a box shadow */
+}
+
+#teamDropdown {
+    flex-grow: 1; /* Allows the dropdown to take up remaining space */
+    margin-right: 20px; /* Adds some space between the dropdown and the button */
+}
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    background-color: inherit;
+    margin-left: 100px;
+    border-radius: 5px;
+  }
+
+.tab button {
+    background-color: inherit;
+    border: #4c80af;
+    outline: #4c80af;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 12px;
+    flex-shrink: 0; /* Prevent the button from shrinking */
+    border-radius: 15px;
+    border-width: 5px;
+}
+  
+  /* Change background color of buttons on hover */
+  .tab button:hover {
+    background-color: #4c80af;
+  }
+  
+  /* Style the tab content */
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+  }  
+
+#teamDropdown{
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    height: 35px;
+}
+
+
+#teamDisplayContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1; /* Take up the remaining space */
+    min-width: 800px;
+    justify-content: center; /* Vertically center */
+    align-items: center; /* Center align children */
+    max-height: 60vh; /* Set the max height to 100% of the viewport height */
+    overflow-y: auto;
+    padding-top: 50px;
+}
+
+
+#rosterTable {
+    /* Add styles for the table here */
+    width: 100%; /* Make the table take up the full width of the container */
+    border-collapse: collapse; /* Remove space between table cells */
+    max-height: fit-content; /* Prevent the table from growing too large */
+}
+
+#rosterTable th {
+    background-color: #4CAF50; /* Change this to any color you like */
+    color: white;
+    font-size: 20px;
+    text-align: center;
+}
+
+#rosterTable td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+#teamDisplayContainer tr:nth-child(even) {
+    /* Add styles for every other table row here */
+    background-color: #ddd; /* Light gray background */
+}
+
 #tableAndSearchContainer {
     display: flex;
     flex-direction: column;
@@ -327,14 +426,43 @@ html, body {
     padding: 10px;
     position: sticky;
     top: 0; /* Stick to the top */
-    width: 100%; /* Match the width of the table */
+    width:100; /* Match the width of the table */
     z-index: 20;
+    display: flex; /* Use flexbox */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: space-between; /* Pushes children to the edges */
+}
+
+#searchBarContainer > div:first-child {
+    display: flex;
+}
+
+.tablinks {
+    background-color: inherit;
+    border: #4c80af;
+    outline: #4c80af;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 12px;
+    flex-shrink: 0; /* Prevent the button from shrinking */
+    border-radius: 15px;
+    border-width: 5px;
+}
+
+.tablinks:hover {
+    background-color: #4c80af;
 }
 
 #searchInput {
     padding: 8px;
-    width: 40%; /* Match the full width of the search bar container */
+    width: 80%; /* Match the full width of the search bar container */
+    margin-right: 10px;
 }
+
+
+
+ 
 
 #tableContainer {
     max-height: 60vh; /* Set the max height to 100% of the viewport height */

@@ -59,40 +59,88 @@
                 <!-- List items will be added here by the JavaScript -->
             </ul>
         </div>
+        <!-- Tabs -->
 
-        <div id="searchAndTableContainer">
-            <!-- Search Bar Container -->
-            <div id="searchBarContainer">
-                <input type="text" id="searchInput" placeholder="Search players...">
-                <select id="positionDropdown">
-                    <option value="All" selected>All</option>
-                    <option value="QB">QB</option>
-                    <option value="RB">RB</option>
-                    <option value="WR">WR</option>
-                    <option value="TE">TE</option>
-                    <option value="FLEX">FLEX</option>
-                </select>
-            </div>
-            <!-- Table Container -->
-            <div id="tableContainer">
-                <!-- Player Table -->
-                <table id="playerTable">
-                    <thead>
-                        <tr>
-                            <th>Nominate</th>
-                            <th>Name</th>
-                            <th>Estimated Value</th>
-                            <th>Position</th>
-                            <th>Positional Rank</th>
-                            <th>Projected Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Player rows will be added here dynamically -->
-                    </tbody>
-                </table>
+        <!-- Search & Table Content -->
+        <div id="SearchAndTable" class="tabcontent">
+            <div id="searchAndTableContainer">
+                <!-- Search Bar Container -->
+                <div id="searchBarContainer">
+                <div>
+                    <input type="text" id="searchInput" placeholder="Search players...">
+                    <select id="positionDropdown">
+                        <option value="All" selected>All</option>
+                        <option value="QB">QB</option>
+                        <option value="RB">RB</option>
+                        <option value="WR">WR</option>
+                        <option value="TE">TE</option>
+                        <option value="FLEX">FLEX</option>
+                    </select>
+                </div>
+                <div
+                    <button class="tablinks" onclick="openTab(event, 'TeamDisplay')">Team Display</button>
+                </div>    
+                </div>
+                <!-- Table Container -->
+                <div id="tableContainer">
+                    <!-- Player Table -->
+                    <table id="playerTable">
+                        <thead>
+                            <tr>
+                                <th>Nominate</th>
+                                <th>Name</th>
+                                <th>Estimated Value</th>
+                                <th>Position</th>
+                                <th>Positional Rank</th>
+                                <th>Projected Points</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Player rows will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
+
+            <!-- "The display for the teams"-->
+            <div id="TeamDisplay" class="tabcontent">
+                <div id="teamSelectContainer">
+                    <!-- Dropdown to select a team -->
+                    <select id="teamDropdown" onchange="updateTeamDisplay(this.value)">
+                        <option value="1">My Team</option>
+                        <option value="2">Team 2</option>
+                        <option value="3">Team 3</option>
+                        <option value="4">Team 4</option>
+                        <option value="5">Team 5</option>
+                        <option value="6">Team 6</option>
+                        <option value="7">Team 7</option>
+                        <option value="8">Team 8</option>
+                        <option value="9">Team 9</option>
+                        <option value="10">Team 10</option>
+                    </select>
+
+                    <div class="tab">
+                        <button class="tablinks" onclick="openTab(event, 'SearchAndTable')">Show Players</button>
+                    </div>
+                </div>
+               
+
+                <div id="teamDisplayContainer">
+                    <table id="rosterTable">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Player</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be added here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         <div id="roundSummariesContainer">
             <h3>Round Summaries:</h3>
             <ul id="roundSummariesList">
