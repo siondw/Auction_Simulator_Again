@@ -14,6 +14,14 @@ class TestPlayer(unittest.TestCase):
             estimated_value=40,
             positional_rank=1
         )
+        self.player2 = Player(
+            name="Travis Kelce",
+            pos="TE",
+            nfl_team="KC",
+            projected_points=314.7,
+            estimated_value=49,
+            positional_rank=1
+        )
 
     def test_initialization(self):
         self.assertEqual(self.player.name, "Tom Brady")
@@ -29,6 +37,7 @@ class TestPlayer(unittest.TestCase):
 
     def test_get_name(self):
         self.assertEqual(self.player.get_name(), "Tom Brady")
+        self.assertEqual(self.player2.get_name(), "Travis Kelce")
 
     def test_get_position(self):
         self.assertEqual(self.player.get_position(), "QB")
@@ -42,6 +51,9 @@ class TestPlayer(unittest.TestCase):
     def test_mark_as_drafted(self):
         self.player.mark_as_drafted()
         self.assertTrue(self.player.is_drafted())
+
+    def test_player2_condition(self):
+        self.assertTrue(self.player2.get_name() == 'Travis Kelce' and self.player2.positional_rank < 2)
 
     def test_get_value(self):
         self.assertEqual(self.player.get_value(), 40)

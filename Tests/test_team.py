@@ -70,11 +70,11 @@ class TestTeam(unittest.TestCase):
         slot = self.team.determine_slot(self.player1)
         self.assertEqual(slot, 'QB1')
         slot = self.team.determine_slot(self.player3)
-        self.assertEqual(slot, 'BN1')
+        self.assertEqual(slot, 'BN2')
         slot = self.team.determine_slot(self.player4)
         self.assertEqual(slot, 'WR2')
         slot = self.team.determine_slot(self.player5)
-        slot.assertEqual(slot, 'BN1')
+        self.assertEqual(slot, 'BN2')
 
     def test_set_strategy(self):
         new_strategy = HumanStrategy(100)

@@ -1,4 +1,5 @@
 import random
+import math
 from abc import ABC
 
 from .AStrategy import Strategy
@@ -29,10 +30,10 @@ class BalancedStrategy(Strategy, ABC):
         # Retrieve the player's estimated value
         estimated_value = player.get_value()
 
+        if player.get_name() == 'Travis Kelce' and current_bid < random.randint(30, 45):
+            return 0.75
         # If the current bid is less than the player's estimated value, increase bid probability
         if current_bid < estimated_value:
             return bid_probability * random.uniform(1, 1.4)  # increase by 0% to 20% randomly
-        if player.get_name == 'Travis Kelce' and current_bid < 37:
-            return bid_probability * 1.85
         else:
             return bid_probability  # do not increase bid probability

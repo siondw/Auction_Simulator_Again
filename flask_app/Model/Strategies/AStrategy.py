@@ -28,8 +28,11 @@ class Strategy(ABC):
 
     def calculate_bid(self, team, player, current_bid):
         roster = team.roster
+
+        
         # Determine the appropriate slot for the player
         slot = self.determine_slot(roster, player)
+
 
         # If there's no available slot, do not place a bid
         if slot is None:
@@ -46,6 +49,7 @@ class Strategy(ABC):
 
         # Calculate the probability of placing a bid
         probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid_for_slot))
+        
 
         # add in strategy bias
         bias_bid = self.bias(player, probability_of_bidding, current_bid, team)
