@@ -1,10 +1,11 @@
 ###
 # Main application interface
 ###
-
+import sys
+print(sys.path)
 # import the create app function 
 # that lives in src/__init__.py
-from source import create_app
+from src import create_app
 from Model.League import League
 from Model.RoundOfAuction import RoundOfAuction
 from Model.Team import Team
