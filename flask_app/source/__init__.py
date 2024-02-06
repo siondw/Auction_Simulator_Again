@@ -1,5 +1,3 @@
-# Some set up for the application 
-
 from flask import Flask
 from Model.League import League
 
@@ -23,9 +21,9 @@ def create_app():
    
 
     # Import the various Beluprint Objects
-    from src.players.players import players
-    from src.teams.teams import teams
-    from src.roa import roa
+    from source.players.players import players
+    from source.teams.teams import teams
+    from source.roa import roa
     
 
     # Register the routes from each Blueprint with the app object
