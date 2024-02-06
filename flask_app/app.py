@@ -1,8 +1,15 @@
 ###
 # Main application interface
 ###
+import os
 import sys
-print(sys.path)
+from pathlib import Path
+
+# Check if running on Heroku
+if 'DYNO' in os.environ:
+    # We're on Heroku, adjust the path
+    sys.path.append(str(Path(__file__).parent.parent))
+
 # import the create app function 
 # that lives in src/__init__.py
 from src import create_app
@@ -12,7 +19,7 @@ from Model.Team import Team
 from flask import jsonify, current_app
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
-import os
+
 
 
 # create the app object
