@@ -4,10 +4,10 @@
 
 # import the create app function 
 # that lives in src/__init__.py
-from flask_app.src import create_app
-from flask_app.Model.League import League
-from flask_app.Model.RoundOfAuction import RoundOfAuction
-from flask_app.Model.Team import Team
+from src import create_app
+from Model.League import League
+from Model.RoundOfAuction import RoundOfAuction
+from Model.Team import Team
 from flask import jsonify, current_app
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
@@ -160,9 +160,9 @@ if __name__ == '__main__':
     # this app will be bound to port 4000. 
     # Take a look at the docker-compose.yml to see 
     # what port this might be mapped to... 
-    app.run(debug = True, host = '0.0.0.0', port = 4000)
-    # port = int(os.environ.get("PORT", 5000))
-    # app.run(host='0.0.0.0', port=port)
+    # app.run(debug = True, host = '0.0.0.0', port = 4000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 
