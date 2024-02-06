@@ -21,16 +21,16 @@ def create_app():
    
 
     # Import the various Beluprint Objects
-    from source.players.players import players
-    from source.teams.teams import teams
-    from source.roa import roa
+    # from source.players.players import players
+    # from source.teams.teams import teams
+    # from source.roa import roa
     
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
-    app.register_blueprint(players,   url_prefix='/p')
-    app.register_blueprint(teams,     url_prefix='/t')
-    app.register_blueprint(roa,       url_prefix='/round')
+    # app.register_blueprint(players,   url_prefix='/p')
+    # app.register_blueprint(teams,     url_prefix='/t')
+    # app.register_blueprint(roa,       url_prefix='/round')
 
      # Don't forget to return the app object
     return app
