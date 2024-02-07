@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, make_response, current_app
-from Model.League import League 
+from flask_app.Model.League import League 
 import json
 
 players = Blueprint('players', __name__)

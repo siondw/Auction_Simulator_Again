@@ -22,9 +22,9 @@ def create_app():
    
 
     # Import the various Beluprint Objects
-    from src.players.players import players
-    from src.teams.teams import teams
-    from src.roa import roa
+    from .players.players import players
+    from .teams.teams import teams
+    from .roa import roa
     
 
     # Register the routes from each Blueprint with the app object

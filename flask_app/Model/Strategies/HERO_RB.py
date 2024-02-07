@@ -1,6 +1,6 @@
 from abc import ABC
 
-from Model.Strategies.AStrategy import Strategy
+from .AStrategy import Strategy
 
 
 class HeroRBStrategy(Strategy, ABC):

@@ -1,16 +1,16 @@
 import random
 
-from Model.PlayerImporter import PlayerImporter
-from Model.RoundOfAuction import RoundOfAuction
-from Model.Strategies.BALANCED import BalancedStrategy
-from Model.Strategies.HERO_RB import HeroRBStrategy
-from Model.Strategies.HUMAN import HumanStrategy
-from Model.Strategies.QB_Heavy import QBHeavyStrategy
-from Model.Strategies.TOP_HEAVY import TopHeavyStrategy
-from Model.Strategies.UNDER_20 import Under20Strategy
-from Model.Strategies.ZERO_RB import ZeroRBStrategy
-from Model.Strategies.KELCE import KelceStrategy
-from Model.Team import Team
+from .PlayerImporter import PlayerImporter
+from .RoundOfAuction import RoundOfAuction
+from .Strategies.BALANCED import BalancedStrategy
+from .Strategies.HERO_RB import HeroRBStrategy
+from .Strategies.HUMAN import HumanStrategy
+from .Strategies.QB_Heavy import QBHeavyStrategy
+from .Strategies.TOP_HEAVY import TopHeavyStrategy
+from .Strategies.UNDER_20 import Under20Strategy
+from .Strategies.ZERO_RB import ZeroRBStrategy
+from .Strategies.KELCE import KelceStrategy
+from .Team import Team
 from flask import current_app
 from flask_socketio import emit
 
