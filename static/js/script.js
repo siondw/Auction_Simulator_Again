@@ -1,7 +1,20 @@
+const config = {
+    development: 'http://localhost:4000',
+    production: 'https://cottage-8ec4da33e7ac.herokuapp.com'
+};
+
+// Determine the current environment
+const environment = window.location.hostname.includes('localhost') ? 'development' : 'production';
+
+// Base URL for API requests
+const BASE_URL = config[environment];
+
+
+
 // script.js
 class SocketIOManager {
     constructor() {
-        this.socket = io(' https://cottage-8ec4da33e7ac.herokuapp.com:5000'); // Adjust the URL
+        this.socket = io(BASE_URL); // Adjust the URL
         this.user_max_bid = 186;
     }
 
@@ -264,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 function startDraft() {
-    fetch('http://localhost:4000/start-draft')
+    fetch(`${BASE_URL}/start-draft`)
     .then(response => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -291,7 +304,7 @@ function startDraft() {
 
 function fetchPlayersAndSetupApp() {
     // Fetch data from API to populate the table
-    fetch('http://localhost:4000/p/players')
+    fetch('${BASE_URL}/p/players')
         .then(response => response.json())
         .then(data => {
             populateTable(data);
@@ -302,7 +315,7 @@ function fetchPlayersAndSetupApp() {
 }
 
 function fetchNominationOrder() {
-    fetch('http://localhost:4000/t/get-team-names')
+    fetch('${BASE_URL}/t/get-team-names')
         .then(response => response.json())
         .then(teamNames => {
             const list = document.getElementById('nominationOrderList');
@@ -324,7 +337,7 @@ function fetchNominationOrder() {
 }
 
 function fetchRoundSummaries() {
-    fetch('http://localhost:4000/get-round-summaries/')
+    fetch('${BASE_URL}/get-round-summaries/')
         .then(response => response.json())
         .then(summaries => {
             const list = document.getElementById('roundSummariesList');
@@ -464,7 +477,7 @@ function updateBidInput() {
 // API call to out get team roster data, that gets a teams' roster based on team ID
 function updateTeamDisplay(selectedTeam) {
     if (selectedTeam) {
-        fetch('http://localhost:4000/t/get-team-roster/' + selectedTeam)
+        fetch('${BASE_URL}/t/get-team-roster/' + selectedTeam)
             .then(response => response.json())
             .then(rosterData => updateRosterDisplay(rosterData))
             .catch(error => console.error('Error fetching roster data:', error));
