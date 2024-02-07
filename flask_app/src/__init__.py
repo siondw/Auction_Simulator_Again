@@ -1,5 +1,6 @@
 from flask import Flask
-from Model.League import League
+from flask_app.Model.League import League
+
 
 def create_app():
     app = Flask(__name__)
