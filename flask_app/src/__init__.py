@@ -1,9 +1,12 @@
-from flask import Flask
+from flask import Flask, render_template, url_for
 from flask_app.Model.League import League
+import os
 
+
+print("Absolute path of templates:", os.path.abspath('static/templates'))
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, static_folder='../../static', template_folder='../../templates')
     app.league = League()
     
     
@@ -15,7 +18,8 @@ def create_app():
     # Example: localhost:8001
     @app.route("/")
     def welcome():
-        return "<h1>Welcome</h1>"
+        return render_template('index.html')
+
     
     
 
