@@ -304,7 +304,7 @@ function startDraft() {
 
 function fetchPlayersAndSetupApp() {
     // Fetch data from API to populate the table
-    fetch('${BASE_URL}/p/players')
+    fetch(`${BASE_URL}/p/players`)
         .then(response => response.json())
         .then(data => {
             populateTable(data);
@@ -315,7 +315,7 @@ function fetchPlayersAndSetupApp() {
 }
 
 function fetchNominationOrder() {
-    fetch('${BASE_URL}/t/get-team-names')
+    fetch(`${BASE_URL}/t/get-team-names`)
         .then(response => response.json())
         .then(teamNames => {
             const list = document.getElementById('nominationOrderList');
@@ -337,7 +337,7 @@ function fetchNominationOrder() {
 }
 
 function fetchRoundSummaries() {
-    fetch('${BASE_URL}/get-round-summaries/')
+    fetch(`${BASE_URL}/get-round-summaries/`)
         .then(response => response.json())
         .then(summaries => {
             const list = document.getElementById('roundSummariesList');
@@ -477,7 +477,7 @@ function updateBidInput() {
 // API call to out get team roster data, that gets a teams' roster based on team ID
 function updateTeamDisplay(selectedTeam) {
     if (selectedTeam) {
-        fetch('${BASE_URL}/t/get-team-roster/' + selectedTeam)
+        fetch(`${BASE_URL}/t/get-team-roster/` + selectedTeam)
             .then(response => response.json())
             .then(rosterData => updateRosterDisplay(rosterData))
             .catch(error => console.error('Error fetching roster data:', error));
