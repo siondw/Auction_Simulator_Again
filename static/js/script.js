@@ -1,7 +1,7 @@
 // script.js
 class SocketIOManager {
     constructor() {
-        this.socket = io('http://localhost:4000'); // Adjust the URL
+        this.socket = io(' https://cottage-8ec4da33e7ac.herokuapp.com:5000'); // Adjust the URL
         this.user_max_bid = 186;
     }
 
