@@ -4,6 +4,9 @@
 import os
 import sys
 from pathlib import Path
+import eventlet
+eventlet.monkey_patch()
+
 
 
 
@@ -165,9 +168,13 @@ if __name__ == '__main__':
     # this app will be bound to port 4000. 
     # Take a look at the docker-compose.yml to see 
     # what port this might be mapped to... 
+
+    
+    socketio.run(app, debug=True, host='0.0.0.0', port=4000)
+    
     # app.run(debug = True, host = '0.0.0.0', port = 4000)
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    # app.run(host='0.0.0.0', port=port)
 
 
 

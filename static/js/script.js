@@ -3,8 +3,11 @@ const config = {
     production: 'https://cottage-8ec4da33e7ac.herokuapp.com'
 };
 
-// Determine the current environment
-const environment = window.location.hostname.includes('localhost') ? 'development' : 'production';
+
+
+const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const environment = isLocalhost ? 'development' : 'production';
+console.log('Environment:', environment);
 
 // Base URL for API requests
 const BASE_URL = config[environment];
