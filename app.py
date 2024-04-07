@@ -1,16 +1,25 @@
 ###
 # Main application interface
 ###
+import os
+import sys
+from pathlib import Path
+import eventlet
+eventlet.monkey_patch()
+
+
+
 
 # import the create app function 
 # that lives in src/__init__.py
-from src import create_app
-from Model.League import League
-from Model.RoundOfAuction import RoundOfAuction
-from Model.Team import Team
+from flask_app.src import create_app
+from flask_app.Model.League import League
+from flask_app.Model.RoundOfAuction import RoundOfAuction
+from flask_app.Model.Team import Team
 from flask import jsonify, current_app
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
+
 
 
 # create the app object

@@ -1,5 +1,5 @@
 import pandas as pd
-from Model.Player import Player
+from .Player import Player
 
 
 class PlayerImporter:

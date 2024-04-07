@@ -1,5 +1,5 @@
 from abc import ABC
-from Model.Strategies.AStrategy import Strategy
+from .AStrategy import Strategy
 
 class TopHeavyStrategy(Strategy, ABC):
     def __init__(self, team_budget):

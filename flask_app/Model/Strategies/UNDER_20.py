@@ -1,5 +1,5 @@
 from abc import ABC
-from Model.Strategies.AStrategy import Strategy
+from .AStrategy import Strategy
 
 
 class Under20Strategy(Strategy, ABC):

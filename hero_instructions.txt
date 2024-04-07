@@ -1,0 +1,4 @@
+Do a regular git add, git commit commit, git push
+
+and then run 
+$ git push heroku deployment:master
