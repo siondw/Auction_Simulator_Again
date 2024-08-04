@@ -47,7 +47,8 @@ class Strategy(ABC):
 
         max_bid_allowed = team.get_max_bid()
 
-        # Calculate the probability of placing a bid
+        # TODO: Shift the sigmoid curve to the left
+        # Calculate the probability of placing a bid -- SIGMOID!
         probability_of_bidding = 1 / (1 + np.exp(current_bid - max_bid_for_slot))
         
 
@@ -79,8 +80,10 @@ class Strategy(ABC):
         }
 
         # Set a 20% tolerance on the expected value
+        # TODO: experiment with different tolerances
         tolerance = 0.2  # 20% tolerance
 
+        # TODO: CHANGE BIDDING LOGIC?
         # Iterate through the slots in order for the player's position
         for slot in slot_order[position]:
             # Calculate the expected value for the slot based on the budget allocation

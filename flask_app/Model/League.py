@@ -33,7 +33,6 @@ class League:
             TopHeavyStrategy: 2,
             ZeroRBStrategy: 2,
             HeroRBStrategy: 3,
-            KelceStrategy: 2
         }
 
         # Initialize strategy usage counters
@@ -48,9 +47,8 @@ class League:
             TopHeavyStrategy,
             ZeroRBStrategy,
             HeroRBStrategy,
-            KelceStrategy
         ]
-        strategy_weights = [0.5, 0.05, 0.05, 0.05, 0.085, 0.2, .035]
+        strategy_weights = [0.5, 0.05, 0.05, 0.05, 0.085, 0.2]
 
         # Field for the Human Team to make retreival easier
         self.human_team = None
@@ -167,6 +165,15 @@ class League:
         
 
     def nominate_player(self, team):
+        """
+        Nominate a player from the available players based on the team's name.
+        Parameters:
+        - team (Team): The team object representing the team making the nomination.
+        Returns:
+        - player_nominated (Player): The nominated player object.
+        Raises:
+        - None
+        """
         if team.name == "Team 1":  # Human team
             emit('prompt_nomination', {'message': 'Please nominate a player.'})
             print("Waiting for user input")
@@ -191,18 +198,22 @@ class League:
         print(player_nominated)
         return player_nominated
 
-
-
     def get_all_players(self):
         return self.players
     
     def get_team_names(self):
+        # Initialize an empty list to store team names
         team_names = []
 
+        # Iterate over each team in the league
         for team in self.teams:
+            # Get the name of the team using the get_name() method
             name = team.get_name()
+
+            # Append the team name to the list
             team_names.append(name)
 
+        # Return the list of team names
         return team_names
     
     def get_human(self):
