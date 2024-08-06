@@ -79,9 +79,9 @@ class Strategy(ABC):
             'TE': ['TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
         }
 
-        # Set a 20% tolerance on the expected value
-        # TODO: experiment with different tolerances
-        tolerance = 0.2  # 20% tolerance
+        # Set a 10% tolerance on the expected value
+        # TODO: experiment with different tolerances -- was previously 20
+        tolerance = 0.1  # 10% tolerance
 
         # TODO: CHANGE BIDDING LOGIC?
         # Iterate through the slots in order for the player's position
