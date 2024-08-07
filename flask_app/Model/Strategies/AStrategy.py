@@ -54,6 +54,7 @@ class Strategy(ABC):
 
         # add in strategy bias
         bias_bid = self.bias(player, probability_of_bidding, current_bid, team)
+        print(team.get_strategy(), "probability of bidding: ", bias_bid)
 
         # Decide whether to place a bid
         if random.random() <= bias_bid and current_bid + 1 < max_bid_allowed:
@@ -98,9 +99,11 @@ class Strategy(ABC):
         # Fallback: find the first empty slot regardless of value
         for slot in slot_order[position]:
             if not roster[slot]:
+                print('Determined slot:', slot)
                 return slot
 
         # If no empty slot is found, return None
+        print('No slot found')
         return None
 
     @abstractmethod

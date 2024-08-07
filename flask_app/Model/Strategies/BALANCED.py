@@ -1,5 +1,5 @@
 import random
-import math
+from math import exp
 from abc import ABC
 
 from .AStrategy import Strategy
@@ -27,12 +27,21 @@ class BalancedStrategy(Strategy, ABC):
         }
 
     def bias(self, player, bid_probability, current_bid, team):
-        # Retrieve the player's estimated value
         estimated_value = player.get_value()
-
-        #TODO: Fix the Bias Probaibltiy to be addition instead of subtraction
-        # If the current bid is less than the player's estimated value, increase bid probability
-        if current_bid < estimated_value:
-            return bid_probability * random.uniform(1.1, 1.4)  # increase by 0% to 40% randomly
-        else:
-            return bid_probability  # do not increase bid probability
+        
+        # Calculate the percentage difference between current bid and estimated value
+        percentage_diff = (current_bid - estimated_value) / estimated_value
+        
+        # Generate a random initial boost between 0.0 and 0.6
+        initial_boost = random.uniform(0.0, 0.6)
+        
+        # Apply the adjusted sigmoid function to modulate the boost
+        adjustment_factor = 1 / (1 + exp(4 * (percentage_diff + 0.25)))
+        
+        # Calculate the new bid probability by adding the adjusted initial boost
+        new_bid_probability = bid_probability + initial_boost * adjustment_factor
+        
+        # Ensure the new bid probability does not exceed 1
+        new_bid_probability = min(new_bid_probability, 1)
+        
+        return new_bid_probability
