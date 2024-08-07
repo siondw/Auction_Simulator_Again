@@ -363,6 +363,10 @@ function fetchRoundSummaries() {
 }
 
 
+function scrollToBottom() {
+    const list = document.getElementById('roundSummariesList');
+    list.scrollTop = list.scrollHeight;
+}
 
 
 
