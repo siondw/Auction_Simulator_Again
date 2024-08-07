@@ -17,8 +17,10 @@ const BASE_URL = config[environment];
 // script.js
 class SocketIOManager {
     constructor() {
-        this.socket = io(BASE_URL); // Adjust the URL
+        this.socket = io(BASE_URL);
         this.user_max_bid = 186;
+        this.session_id = localStorage.getItem('session_id'); // Retrieve the session ID from localStorage
+        console.log('Session ID in constructor:', this.session_id); // Add this for debugging
     }
 
     initialize() {
@@ -159,24 +161,24 @@ class SocketIOManager {
         }
 
         // Send the bid to the server
-        this.socket.emit('place_human_bid', { bid_amount: bidAmount });
+        this.socket.emit('place_human_bid', { session_id: this.session_id, bid_amount: bidAmount });
         console.log("Bid Placed: " + bidAmount);
     }
 
     sendNomination(selectedPlayer) {
-        this.socket.emit("player_nominated", { player: selectedPlayer });
+        this.socket.emit("player_nominated", { session_id: this.session_id, player: selectedPlayer });
         draftLogicContainer.classList.remove('glowing-gold');
         localStorage.setItem('isNominationEnabled', false);
     }
 
     startRound() {
-        console.log("Starting Round...")
-        this.socket.emit("start_round");
-        
+        console.log('Session ID before starting round:', this.session_id);
+        this.socket.emit('start_round', { session_id: this.session_id });
     }
+    
 
     passBid() {
-        this.socket.emit("pass_bid");
+        this.socket.emit("pass_bid", { session_id: this.session_id });
     }
 
     endRound() {
@@ -211,13 +213,17 @@ class SocketIOManager {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    let socket;  // Declare socket variable to be initialized later
+
     const draftStarted = localStorage.getItem('draftStarted');
-    const socket = new SocketIOManager();
-    socket.initialize();
+    const session_id = localStorage.getItem('session_id');  // Retrieve session ID
+    console.log('Session ID on DOMContentLoaded:', session_id);  // Debugging session ID
 
+    if (draftStarted && session_id) {
+        // Initialize SocketIOManager with the retrieved session ID
+        socket = new SocketIOManager();
+        socket.initialize();
 
-
-    if (draftStarted) {
         // Hide the welcome screen
         document.getElementById('welcomeScreen').style.display = 'none';
         // Continue with the application setup
@@ -228,86 +234,80 @@ document.addEventListener('DOMContentLoaded', () => {
         // Show the welcome screen
         document.getElementById('welcomeScreen').style.display = 'block';
         // Attach the event listener to the start button
-        document.getElementById('startButton').addEventListener('click', startDraft);
+        document.getElementById('startButton').addEventListener('click', () => {
+            startDraft().then(() => {
+                // Initialize SocketIOManager after session ID is set
+                socket = new SocketIOManager();
+                socket.initialize();
+            });
+        });
     }
 
-        // Get your "Start Round" button by ID
-        const startRoundButton = document.getElementById('startRound');
+    // Attach event listener for the "Start Round" button after initialization
+    document.getElementById('startRound').addEventListener('click', () => {
+        const session_id = localStorage.getItem('session_id');
+        console.log('Session ID before starting round:', session_id);  // Debugging session ID
 
-        // Attach an event listener to the "Start Round" button
-        startRoundButton.addEventListener('click', () => {
-            // Add the CSS class 'gray-button' to color the button gray
-            startRoundButton.classList.add('gray-button'); 
-            // Optionally disable the button after starting the round to prevent multiple clicks
-            startRoundButton.disabled = true;
-            
-            
-            // Call the startRound method when the button is clicked
-            socket.startRound();
+        socket.startRound();
+    });
 
-            
-        });
+    // Other event listeners...
+    document.getElementById('resetButton').addEventListener('click', function() {
+        restartDraft();
+        if (socket) {
+            socket.disconnect();
+        }
+    });
 
-        document.getElementById('resetButton').addEventListener('click', function() {
-            restartDraft();
-        
-            if(socket){
-                socket.disconnect();
-            }
-        });
-        
-        document.getElementById('passButton').addEventListener('click', function() {
-            const passButton = document.getElementById('passButton');
+    document.getElementById('passButton').addEventListener('click', function() {
+        const passButton = document.getElementById('passButton');
+        passButton.classList.add('gray-button');
+        passButton.textContent = "Passed";
+        socket.passBid();
+    });
 
-            passButton.classList.add('gray-button');
-            passButton.textContent = "Passed";
-            socket.passBid();
-        });
+    document.getElementById('bidButton').addEventListener('click', function() {
+        socket.sendUserBid();
+    });
 
-        document.getElementById('bidButton').addEventListener('click', function() {
-            socket.sendUserBid();
-        });
+    window.nominatePlayer = function(playerName) {
+        socket.sendNomination(playerName);
+    };
 
-        window.nominatePlayer = function(playerName) {
-            socket.sendNomination(playerName);
-        };
-
-        openTab(event, 'SearchAndTable');
-
-        
+    openTab(event, 'SearchAndTable');
 });
 
 
-
 function startDraft() {
-    fetch(`${BASE_URL}/start-draft`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Draft started:', data.message);
-        fetchPlayersAndSetupApp();
-        fetchNominationOrder();
-    })
-    .catch(error => {
-        console.error('Error starting draft:', error);
-    })
-    .finally(() => {
-        // Hide the loader and the welcome screen after draft starts
-        document.getElementById('welcomeScreen').style.display = 'none';
-    });
+    return fetch(`${BASE_URL}/start-draft`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Draft started:', data.message);
+            // Store the session ID in localStorage
+            localStorage.setItem('session_id', data.session_id);
+            console.log('Session ID set:', data.session_id);  // Debugging session ID
+
+            fetchPlayersAndSetupApp();
+            fetchNominationOrder();
+        })
+        .catch(error => {
+            console.error('Error starting draft:', error);
+        })
+        .finally(() => {
+            document.getElementById('welcomeScreen').style.display = 'none';
+        });
 
     localStorage.setItem('draftStarted', true);
     localStorage.setItem('isNominationEnabled', false);
 }
 
 
+
+
 function fetchPlayersAndSetupApp() {
-    // Fetch data from API to populate the table
-    fetch(`${BASE_URL}/p/players`)
+    const session_id = localStorage.getItem('session_id');
+    
+    fetch(`${BASE_URL}/p/players?session_id=${session_id}`)
         .then(response => response.json())
         .then(data => {
             populateTable(data);
@@ -318,19 +318,21 @@ function fetchPlayersAndSetupApp() {
 }
 
 function fetchNominationOrder() {
-    fetch(`${BASE_URL}/t/get-team-names`)
+    fetch(`${BASE_URL}/t/get-team-names?session_id=${localStorage.getItem('session_id')}`)
         .then(response => response.json())
         .then(teamNames => {
+            console.log("Received team names:", teamNames); // Add this line to inspect the response
+            if (!Array.isArray(teamNames)) {
+                console.error("Expected an array of team names but got:", teamNames);
+                return;
+            }
+
             const list = document.getElementById('nominationOrderList');
+            list.innerHTML = ''; // Clear existing list items
+
             teamNames.forEach(teamName => {
-                console.log('Team name:', teamName);
                 const listItem = document.createElement('li');
                 listItem.textContent = teamName;
-
-                // Extracting the team number from the team name
-                const teamNumber = teamName.split(' ')[1]; // Assuming the format "Team X"
-                listItem.id = teamNumber; // Setting the ID as X
-
                 list.appendChild(listItem);
             });
         })
@@ -340,7 +342,9 @@ function fetchNominationOrder() {
 }
 
 function fetchRoundSummaries() {
-    fetch(`${BASE_URL}/get-round-summaries/`)
+    const session_id = localStorage.getItem('session_id');
+    
+    fetch(`${BASE_URL}/get-round-summaries/?session_id=${session_id}`)
         .then(response => response.json())
         .then(summaries => {
             const list = document.getElementById('roundSummariesList');
@@ -358,16 +362,18 @@ function fetchRoundSummaries() {
         });
 }
 
-function scrollToBottom() {
-    const list = document.getElementById('roundSummariesList');
-    console.log("Tried scroling")
-    list.scrollTop = list.scrollHeight;
-}
 
 
 
-// Function to populate the table with player data
+
+
 function populateTable(players) {
+    console.log("Received players data:", players); // Add this line to inspect the response
+    if (!Array.isArray(players)) {
+        console.error("Expected an array of players but got:", players);
+        return;
+    }
+
     const tableBody = document.getElementById('playerTable').getElementsByTagName('tbody')[0];
     tableBody.innerHTML = ''; // Clear the table body
 
@@ -384,7 +390,6 @@ function populateTable(players) {
         `;
     });
 }
-
 
 
 // Function to filter the table

@@ -1,40 +1,32 @@
-###
-# Main application interface
-###
 import os
 import sys
 from pathlib import Path
 import eventlet
+import uuid
 eventlet.monkey_patch()
 
-
-
-
-# import the create app function 
-# that lives in src/__init__.py
 from flask_app.src import create_app
 from flask_app.Model.League import League
 from flask_app.Model.RoundOfAuction import RoundOfAuction
 from flask_app.Model.Team import Team
-from flask import jsonify, current_app
+from flask import jsonify, current_app, request, g  # Import g from flask
 from flask_socketio import SocketIO, emit
 from flask_cors import CORS
+from flask_app.session_manager import get_session_data  
 
 
-
-# create the app object
+# Create the app object
 app = create_app()
-CORS(app)  
+CORS(app)
 
 # Create the Socket
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-# Example WebSocket event for a client connection
+# WebSocket Events
 @socketio.on('connect')
 def handle_connect():
     print('Client connected')
 
-# Example WebSocket event for a client disconnection
 @socketio.on('disconnect')
 def handle_disconnect():
     print('Client disconnected')
@@ -43,85 +35,84 @@ def handle_disconnect():
 def doSomething():
     print('Message Received!')
 
-
 @socketio.on('place_human_bid')
 def handle_human_bid(data):
-    
-    league = current_app.league
+    session_id = data.get('session_id')
+    session_data = get_session_data()
+    league = session_data.get(session_id)
     
     if not league:
         print("League not initialized")
+        emit('bid_update', {'status': 'failed', 'message': 'League not initialized'})
+        return
 
-    print("Received a bid:", data)  # This will print the received data
+    print("Received a bid:", data)
     auction = current_app.current_auction_round
 
     try:
-        # Ensure the auction round is available
-        auction = current_app.current_auction_round
         if not auction:
             emit('bid_update', {'status': 'failed', 'message': 'Auction round not available'})
             return
 
-        # Parse and validate bid amount
         bid_amount = int(data.get('bid_amount', 0))
         human_team = league.get_human()
 
-        # Additional checks (like max bid)
         if bid_amount <= auction.current_bid:
             emit('bid_update', {'status': 'failed', 'message': 'Bid must be higher than current bid'})
             return
 
-        if bid_amount > human_team.get_max_bid():  # Assuming max_bid is a property of the team
+        if bid_amount > human_team.get_max_bid():
             emit('bid_update', {'status': 'failed', 'message': 'Bid exceeds your maximum allowed bid'})
             return
 
-        # Process the bid
         auction.process_bid(human_team, bid_amount)
         emit('bid_update', {'status': 'success', 'new_bid': bid_amount}, broadcast=True)
 
     except ValueError:
         emit('bid_update', {'status': 'failed', 'message': 'Invalid bid amount'})
     except Exception as e:
-        # Generic error handling, log the exception for debugging
         print(f"Error handling bid: {e}")
         emit('bid_update', {'status': 'failed', 'message': 'An error occurred while processing the bid'})
 
 @socketio.on('player_nominated')
 def handle_player_nomination(data):
-    selected_player = data['player']
-    print("Player Nominated")
+    session_id = data.get('session_id')
+    session_data = get_session_data()
+    league = session_data.get(session_id)
     
-    # Access the league instance stored in current_app
-    league = current_app.league
     if not league:
-        # Handle the case where the league is not yet initialized
         emit('error', {'message': 'League not initialized'})
         return
 
-    # Find the player object based on the selected player's name
+    selected_player = data['player']
     player_object = league.find_player_by_name(selected_player)
 
     if player_object:
-        # Call a method to continue the auction round with the nominated player
         league.continue_auction_round(player_object)
     else:
-        # Handle the case where the player is not found
         emit('error', {'message': 'Player not found'})
 
+
 @socketio.on('start_round')
-def handle_start_round():
-    print("Start Round")
-    # Assuming you have an instance of your auction/league class
-    league = current_app.league
-        
+def handle_start_round(data):
+    session_id = data.get('session_id')
+    print(f"Received session_id for start_round: {session_id}")
+    session_data = get_session_data()
+    league = session_data.get(session_id)
+    print(f"Retrieved league for start_round: {league}")
+    
+    if not league:
+        emit('error', {'message': 'League not initialized'})
+        return
+    
     league.initiate_auction_round()
 
-@socketio.on('pass_bid')
-def handle_pass_bid():
 
+@socketio.on('pass_bid')
+def handle_pass_bid(data):
+    session_id = data.get('session_id')
     auction = current_app.current_auction_round
     
-
     try:
         if not auction:
             raise ValueError("Auction round not available.")
@@ -129,47 +120,53 @@ def handle_pass_bid():
         print("Pass Bid")
     except Exception as e:
         emit('error', {'message': str(e)})
-            
-# @app.errorhandler(Exception)
-# def handle_exception(e):
-#     # You can log the exception here for debugging
-#     # Then, emit a response to Appsmith
-#     emit('error', {'message': str(e)}, broadcast=True)
-#     return "Please wait for round to begin", 500
 
-
+# Flask Routes
 @app.route('/start-draft', methods=['GET'])
 def start_draft():
-    # Creating a new instance for the draft
-    current_app.league = League()
+    session_id = str(uuid.uuid4())
+    league = League()
+    
+    session_data = get_session_data()
+    session_data[session_id] = league
+    
+    print(f"New league object created: {league}")
+    print(f"New session created with ID: {session_id}")
+    print(f"Stored league object: {session_data[session_id]}")
+    print(f"Current session_data: {session_data}")
 
-    # Setting up the league (e.g., loading players)
-    current_app.league.import_players()  
-
-    # Set nomination order
-    # current_app.league.set_nomination_order
-
-    # Since no data needs to be returned, just send a confirmation response
-    return jsonify({'message': 'Draft initialized successfully'}), 200
+    return jsonify({'message': 'Draft initialized successfully', 'session_id': session_id}), 200
 
 @app.route('/get-round-summaries/', methods=['GET'])
 def get_summaries():
+    session_id = request.args.get('session_id')
+    session_data = get_session_data()
+    league = session_data.get(session_id)
 
-    league = current_app.league
-    
     if not league:
         return jsonify({'message': 'League not initialized'}), 500
 
     return jsonify(league.round_summaries), 200
 
+@app.route('/test-session', methods=['GET'])
+def test_session():
+    session_id = request.args.get('session_id')
+    action = request.args.get('action')
+    
+    session_data = get_session_data()
+    
+    if action == 'create':
+        session_data[session_id] = {'test': 'This is a test value'}
+        print(f"Session created: {session_data}")
+        return jsonify({'message': 'Session created', 'session_id': session_id})
+    
+    elif action == 'retrieve':
+        value = session_data.get(session_id)
+        print(f"Session data retrieved: {value}")
+        return jsonify({'session_data': value})
+    
+    else:
+        return jsonify({'error': 'Invalid action'}), 400
 
 if __name__ == '__main__':
-    # we want to run in debug mode (for hot reloading) 
-    # this app will be bound to port 4000. 
-    # Take a look at the docker-compose.yml to see 
-    # what port this might be mapped to... 
-    app.run(debug = False, host = '0.0.0.0', port = 4000)
-
-
-
-
+    socketio.run(app, debug=False, host='0.0.0.0', port=4000)

@@ -1,47 +1,45 @@
-from flask import Blueprint, request, jsonify, make_response, current_app
-from flask_app.Model.League import League 
-import json
-
-
-
+from flask import Blueprint, request, jsonify
+from flask_app.session_manager import get_session_data
 
 teams = Blueprint('teams', __name__)
 
 @teams.route('/get-team-roster/<team_id>', methods=['GET'])
 def get_team_roster(team_id):
-    league = current_app.league
+    session_id = request.args.get('session_id')
+    session_data = get_session_data()
+    print(f"Session data: {session_data}")
+    league = session_data.get(session_id)
+    print(f"League: {league}")
+
+    if not league:
+        return jsonify({'error': 'League not initialized'}), 500
 
     team_name = f"Team {team_id}"
-    team_roster = league.get_team_roster(team_name)  # Retrieve the team object
+    team_roster = league.get_team_roster(team_name)
 
     if not team_roster:
-        # Handle case where team is not found
         return jsonify({'error': 'Team not found'}), 404
 
-    # team_roster = team.get_roster()  # Retrieve the roster using get_roster method
-
-    formatted_roster = []
-    for slot, player in team_roster.items():
-        if player is not None:
-            player_data = {'name': player.get_name(), 'slot': slot}
-        else:
-            player_data = {'name': 'Empty', 'slot': slot}
-
-        formatted_roster.append(player_data)
+    formatted_roster = [{'name': player.get_name() if player else 'Empty', 'slot': slot}
+                        for slot, player in team_roster.items()]
 
     return jsonify(formatted_roster)
 
-
-@teams.route('get-team-names', methods=['GET'])
+@teams.route('/get-team-names', methods=['GET'])
 def get_team_names():
-    league = current_app.league
-    nom_order = league.nomination_order
-    teams = []
+    try:
+        session_id = request.args.get('session_id')
+        session_data = get_session_data()
+        league = session_data.get(session_id)
 
-    for team in nom_order:
-        teams.append(team.name)
+        if not league:
+            return jsonify({'message': 'League not initialized'}), 500
 
-    return jsonify(teams)
+        team_names = [team.name for team in league.nomination_order]
+        print(f"Team names: {team_names}")  # Log the team names
 
+        return jsonify(team_names)
 
-
+    except Exception as e:
+        print(f"Error in get_team_names: {e}")  # Log any exceptions
+        return jsonify({'error': 'An error occurred while fetching team names'}), 500
