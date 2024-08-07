@@ -38,7 +38,6 @@ class League:
         # Initialize strategy usage counters
         strategy_usage = {strategy: 0 for strategy in strategy_caps}
 
-
         # Define the available strategies and corresponding weights
         strategies = [
             BalancedStrategy,
@@ -50,7 +49,7 @@ class League:
         ]
         strategy_weights = [0.5, 0.05, 0.05, 0.05, 0.085, 0.2]
 
-        # Field for the Human Team to make retreival easier
+        # Field for the Human Team to make retrieval easier
         self.human_team = None
 
         # Create the human team as Team 1
@@ -59,20 +58,27 @@ class League:
         self.teams.append(human_team)
 
         # Create the remaining computer-controlled teams
+        balanced_teams_count = 0
         for i in range(1, num_teams):
-            # Adjust strategies and weights based on usage
-            available_strategies = [s for s in strategies if strategy_usage[s] < strategy_caps[s]]
-            adjusted_weights = [strategy_weights[strategies.index(s)] for s in available_strategies]
+            # If we're at the last two teams and don't have 2 balanced teams yet, force balanced strategy
+            if i >= num_teams - 2 and balanced_teams_count < 2:
+                chosen_strategy_class = BalancedStrategy
+            else:
+                # Adjust strategies and weights based on usage
+                available_strategies = [s for s in strategies if strategy_usage[s] < strategy_caps[s]]
+                adjusted_weights = [strategy_weights[strategies.index(s)] for s in available_strategies]
 
-            # Choose a strategy randomly from the available strategies
-            chosen_strategy_class = random.choices(available_strategies, adjusted_weights)[0]
+                # Choose a strategy randomly from the available strategies
+                chosen_strategy_class = random.choices(available_strategies, adjusted_weights)[0]
+            
             strategy_usage[chosen_strategy_class] += 1  # Increment
+            if chosen_strategy_class == BalancedStrategy:
+                balanced_teams_count += 1
 
             # Create the team with the chosen strategy
             team_name = f"Team {i + 1}"
             team = Team(name=team_name, strategy=chosen_strategy_class(team_budget=200))
             self.teams.append(team)
-
 
         self.set_nomination_order()
 
