@@ -423,7 +423,7 @@ function openTab(evt, tabName) {
     // Get all elements with class="tabcontent" and hide them
     tabcontent = document.getElementsByClassName("tabcontent");
     for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "";
+        tabcontent[i].style.display = "none";  // Hide all tab content
     }
 
     // Get all elements with class="tablinks" and remove the class "active"
@@ -434,15 +434,16 @@ function openTab(evt, tabName) {
 
     // Show the current tab, and add an "active" class to the button that opened the tab
     document.getElementById(tabName).style.display = "block";
-    evt.currentTarget.className += " active";
+    evt.currentTarget.className += " active";  // Use the passed event object
 
-    // Lazy load Team Display content
+    // Additional logic based on the tab opened
     if (tabName === 'TeamDisplay') {
-        updateTeamDisplay('1'); // Load data for Team 1 by default
+        updateTeamDisplay('1'); // Assuming you want to load data for Team 1 by default
     } else if (tabName === 'SearchAndTable') {
         filterTableByPosition('All'); // Show all positions by default
     }
 }
+
 
 
 // Attach search function to search input
@@ -486,39 +487,45 @@ function updateBidInput() {
     bidInput.value = currentInput;
 }
 
-// API call to out get team roster data, that gets a teams' roster based on team ID
 function updateTeamDisplay(selectedTeam) {
-    if (selectedTeam) {
-        fetch(`${BASE_URL}/t/get-team-roster/` + selectedTeam)
-            .then(response => response.json())
-            .then(rosterData => updateRosterDisplay(rosterData))
-            .catch(error => console.error('Error fetching roster data:', error));
-    }
+    fetch(`${BASE_URL}/t/get-team-roster/` + selectedTeam)
+        .then(response => response.json())
+        .then(rosterData => {
+            console.log('Roster data:', rosterData);  // Check the structure of rosterData
+            updateRosterDisplay(rosterData);
+        })
+        .catch(error => console.error('Error fetching roster data:', error));
 }
+
 
 // Function to update the team roster display
 function updateRosterDisplay(rosterData) {
-    console.log('Roster data:', rosterData);
+    if (!Array.isArray(rosterData)) {
+        console.error('Expected rosterData to be an array but received:', rosterData);
+        return;  // Exit the function if rosterData is not an array
+    }
+
     var rosterTable = document.getElementById('rosterTable').getElementsByTagName('tbody')[0];
-    rosterTable.innerHTML = ''; // Clear existing rows
+    rosterTable.innerHTML = '';  // Clear existing rows
 
     var positions = ['QB1', 'QB2', 'WR1', 'WR2', 'WR3', 'RB1', 'RB2', 'TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'];
 
     positions.forEach(position => {
-        var row = document.createElement('tr'); // Create a new table row
+        var row = document.createElement('tr');
+        var positionCell = document.createElement('td');
+        positionCell.textContent = position;
+        row.appendChild(positionCell);
 
-        var positionCell = document.createElement('td'); // Create a new cell for the position
-        positionCell.textContent = position; // Set the cell's text to the position
-        row.appendChild(positionCell); // Add the cell to the row
-
-        var playerCell = document.createElement('td'); // Create a new cell for the player
+        var playerCell = document.createElement('td');
         var player = rosterData.find(player => player.slot === position); // Find the player for this position
-        playerCell.textContent = player ? player.name : ''; // Set the cell's text to the player's name if a player is found, or to an empty string if not
-        row.appendChild(playerCell); // Add the cell to the row
 
-        rosterTable.appendChild(row); // Add the row to the table
+        playerCell.textContent = player ? player.name : 'Empty';  // Show 'Empty' if no player found
+        row.appendChild(playerCell);
+
+        rosterTable.appendChild(row);
     });
 }
+
 
 
 

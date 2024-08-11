@@ -67,12 +67,8 @@ class Strategy(ABC):
             return None  # Not willing to bid
 
     def determine_slot(self, roster, player):
-
-        # Retrieve the player's position and value
         position = player.get_position()
         player_value = player.get_value()
-
-        # Define the order of slots for each position
         slot_order = {
             'QB': ['QB1', 'QB2', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
             'RB': ['RB1', 'RB2', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
@@ -80,31 +76,20 @@ class Strategy(ABC):
             'TE': ['TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
         }
 
-        # Set a 10% tolerance on the expected value
-        # TODO: experiment with different tolerances -- was previously 20
+        # Set a tolerance for the expected value
         tolerance = 0.1  # 10% tolerance
 
-        # TODO: CHANGE BIDDING LOGIC?
         # Iterate through the slots in order for the player's position
-        for slot in slot_order[position]:
-            # Calculate the expected value for the slot based on the budget allocation
-            ev = self.budget_allocation[slot]
-
-            # Check if the slot is empty
-            if not roster[slot]:
-                # Check if the player's value is above the minimum tolerance for the slot
+        for slot in slot_order.get(position, []):
+            ev = self.budget_allocation.get(slot, 0)  # Get expected value or default to 0 if not found
+            if not roster.get(slot):  # Check if the slot is empty, assuming roster is a dictionary
                 if player_value >= (ev - ev * tolerance):
-                    return slot  # Assign to this slot
+                    print("Determined Slot: ", slot)
+                    return slot  # Return this slot if it matches the criteria
 
-        # Fallback: find the first empty slot regardless of value
-        for slot in slot_order[position]:
-            if not roster[slot]:
-                print('Determined slot:', slot)
-                return slot
-
-        # If no empty slot is found, return None
-        print('No slot found')
+        # If no slot is suitable, return None
         return None
+
 
     @abstractmethod
     def bias(self, player, bid_probability, current_bid, team):

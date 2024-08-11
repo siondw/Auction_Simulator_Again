@@ -6,10 +6,12 @@ teams = Blueprint('teams', __name__)
 @teams.route('/get-team-roster/<team_id>', methods=['GET'])
 def get_team_roster(team_id):
     session_id = request.args.get('session_id')
+    print(f"Attempting to access session data with session_id: {session_id}")
     session_data = get_session_data()
-    print(f"Session data: {session_data}")
+    print(f"Session data immediately after retrieval: {session_data}")
+
     league = session_data.get(session_id)
-    print(f"League: {league}")
+    print(f"League object retrieved: {league}")
 
     if not league:
         return jsonify({'error': 'League not initialized'}), 500
