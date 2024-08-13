@@ -1,4 +1,5 @@
 import random
+import os
 
 from .PlayerImporter import PlayerImporter
 from .RoundOfAuction import RoundOfAuction
@@ -83,8 +84,10 @@ class League:
         self.set_nomination_order()
 
     def import_players(self):
+        # file_path = os.path.join(os.getcwd(), "flask_app/Resources/Players.csv")
+
         self.players = PlayerImporter.import_players_from_csv("flask_app/Resources/Players.csv")
-        self.player_dict = {player.name: player for player in self.players}
+        self._dict = {player.name: player for player in self.players}
 
 
     # def conduct_auction_round(self, player_nominated):

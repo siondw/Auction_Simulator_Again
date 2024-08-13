@@ -99,6 +99,3 @@ class RoundOfAuction:
             'current_bid': self.current_bid,
             'highest_bidder': self.highest_bidder.get_name()
         })
-
-    
-

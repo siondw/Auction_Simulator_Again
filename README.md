@@ -27,7 +27,7 @@ Auction_Simulator_Again
 │  │  ├─ Team.py
 │  │  └─ __init__.py
 │  ├─ Resources
-│  │  ├─ Players.csv
+│  │  ├─ s.csv
 │  │  └─ __init__.py
 │  ├─ src
 │  │  ├─ players
