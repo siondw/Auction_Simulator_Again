@@ -29,11 +29,11 @@ class League:
         # Strategy caps
         strategy_caps = {
             BalancedStrategy: float('inf'),  # No cap
-            Under20Strategy: 1,
+            Under20Strategy: 2,
             QBHeavyStrategy: 2,
             TopHeavyStrategy: 2,
             ZeroRBStrategy: 2,
-            HeroRBStrategy: 3,
+            HeroRBStrategy: 2,
         }
 
         # Initialize strategy usage counters
