@@ -106,65 +106,121 @@ class Team:
     def get_roster(self):
         return self.roster
     
-
-
     def refactor_budget(self, cost, slot):
-        if slot in self.strategy.budget_allocation:
-            allocated_budget = self.strategy.budget_allocation[slot]
-            remaining_budget = allocated_budget - cost
+        if slot not in self.strategy.budget_allocation:
+            return
 
-            if remaining_budget > 0:  # Handle underspend
-                position_category = slot[:2]  # e.g., 'WR', 'RB', 'QB'
-                related_positions = [pos for pos in self.strategy.budget_allocation.keys() if pos.startswith(position_category) and pos != slot]
+        allocated_budget = self.strategy.budget_allocation[slot]
+        remaining_budget = allocated_budget - cost
+        self.strategy.budget_allocation[slot] = cost
+        self.roster[slot] = "Filled"
 
-                remaining_to_category = round(0.7 * remaining_budget, 2)
-                remaining_to_bench = round(0.3 * remaining_budget, 2)
+        if remaining_budget > 0:
+            self._handle_underspend(remaining_budget, slot)
+        elif remaining_budget < 0:
+            self._handle_overspend(abs(remaining_budget), slot)
 
-                total_related_allocation = sum(self.strategy.budget_allocation[pos] for pos in related_positions if self.roster[pos] is None)
-                
-                if total_related_allocation > 0 and remaining_to_category > 0:
-                    for position in related_positions:
-                        if self.roster[position] is None:
-                            additional_budget = round((remaining_to_category * self.strategy.budget_allocation[position]) / total_related_allocation, 2)
-                            if self.budget + additional_budget <= 200:
-                                self.strategy.budget_allocation[position] += additional_budget
-                                remaining_to_category -= additional_budget
+        self._ensure_budget_constraint()
+        self.budget = sum(self.strategy.budget_allocation.values())
 
-                bench_positions = ['BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6']
-                total_bench_allocation = sum(self.strategy.budget_allocation[bn] for bn in bench_positions if self.roster[bn] is None)
+    def _handle_underspend(self, remaining_budget, slot):
+        remaining_to_related = round(0.7 * remaining_budget, 2)
+        remaining_to_flex = round(0.3 * remaining_budget, 2)
 
-                if total_bench_allocation > 0 and remaining_to_bench > 0:
-                    for bench_position in bench_positions:
-                        if self.roster[bench_position] is None:
-                            additional_budget = round((remaining_to_bench * self.strategy.budget_allocation[bench_position]) / total_bench_allocation, 2)
-                            if self.budget + additional_budget <= 200:
-                                self.strategy.budget_allocation[bench_position] += additional_budget
-                                remaining_to_bench -= additional_budget
+        remaining_to_related = self._redistribute_to_related(remaining_to_related, slot)
+        remaining_to_flex += remaining_to_related
+        
+        remaining_to_flex = self._redistribute_to_flex(remaining_to_flex)
+        self._redistribute_to_skill_or_bench(remaining_to_flex)
 
-            elif remaining_budget < 0:  # Handle overspend
-                overspend = abs(remaining_budget)
-                position_category = slot[:2]  # e.g., 'WR', 'RB', 'QB'
-                related_positions = [pos for pos in self.strategy.budget_allocation.keys() if pos.startswith(position_category) and pos != slot]
+    def _redistribute_to_related(self, amount, slot):
+        related_positions = self._get_open_related_positions(slot)
+        return self._redistribute_budget(related_positions, amount)
 
-                total_related_allocation = sum(self.strategy.budget_allocation[pos] for pos in related_positions if self.roster[pos] is None)
-                
-                if total_related_allocation > 0:
-                    for position in related_positions:
-                        if self.roster[position] is None:
-                            subtract_amount = round((overspend * self.strategy.budget_allocation[position]) / total_related_allocation, 2)
-                            if self.strategy.budget_allocation[position] - subtract_amount >= 1:  # Ensure not below $1
-                                self.strategy.budget_allocation[position] -= subtract_amount
-                                overspend -= subtract_amount
-                                if overspend <= 0:
-                                    break
+    def _redistribute_to_flex(self, amount):
+        if self.roster['Flex'] is None:
+            self.strategy.budget_allocation['Flex'] += amount
+            return 0
+        return amount
 
-                if overspend > 0:  # If overspend remains, deduct from other primary positions
-                    primary_positions = ['QB1', 'QB2', 'RB1', 'RB2']
-                    for primary_position in primary_positions:
-                        if self.roster[primary_position] is None:
-                            subtract_amount = min(overspend, self.strategy.budget_allocation[primary_position] - 1)
-                            if self.strategy.budget_allocation[primary_position] - subtract_amount >= 1:  # Ensure not below $1
-                                self.strategy.budget_allocation[primary_position] -= subtract_amount
-                                overspend -= subtract_amount
-                                if overspend <= 0:
-                                    break
+    def _redistribute_to_skill_or_bench(self, amount):
+        skill_positions = self._get_open_skill_positions()
+        if skill_positions:
+            self._redistribute_budget(skill_positions, amount, evenly=True)
+        else:
+            bench_positions = self._get_open_bench_positions()
+            self._redistribute_budget(bench_positions, amount)
+
+    def _handle_overspend(self, overspend, slot):
+        overspend = self._reduce_from_related(overspend, slot)
+        overspend = self._reduce_from_bench(overspend)
+        overspend = self._reduce_from_skill(overspend, slot)
+        return overspend
+
+    def _reduce_from_related(self, amount, slot):
+        related_positions = self._get_open_related_positions(slot)
+        return self._reduce_budget(related_positions, amount)
+
+    def _reduce_from_bench(self, amount):
+        bench_positions = self._get_open_bench_positions()
+        return self._reduce_budget(bench_positions, amount)
+
+    def _reduce_from_skill(self, amount, slot):
+        skill_positions = [pos for pos in self._get_open_skill_positions() 
+                           if not pos.startswith(slot[:2])]
+        return self._reduce_budget(skill_positions, amount, evenly=True)
+
+    def _ensure_budget_constraint(self):
+        total_budget = sum(self.strategy.budget_allocation.values())
+        if total_budget > 200:
+            excess = total_budget - 200
+            all_positions = list(self.strategy.budget_allocation.keys())
+            self._reduce_budget(all_positions, excess)
+
+    def _get_open_related_positions(self, slot):
+        return [pos for pos in self.strategy.budget_allocation.keys() 
+                if pos.startswith(slot[:2]) and pos != slot and self.roster[pos] is None]
+
+    def _get_open_skill_positions(self):
+        return [pos for pos in ['QB1', 'QB2', 'WR1', 'WR2', 'WR3', 'RB1', 'RB2', 'TE1'] 
+                if self.roster[pos] is None]
+
+    def _get_open_bench_positions(self):
+        return [pos for pos in ['BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'] 
+                if self.roster[pos] is None]
+
+    def _redistribute_budget(self, positions, amount, evenly=False):
+        if not positions:
+            return amount
+        if evenly:
+            per_position = round(amount / len(positions), 2)
+            for position in positions:
+                self.strategy.budget_allocation[position] += per_position
+                amount -= per_position
+        else:
+            total_allocation = sum(self.strategy.budget_allocation[pos] for pos in positions)
+            for position in positions:
+                additional_budget = round((amount * self.strategy.budget_allocation[position]) / total_allocation, 2)
+                self.strategy.budget_allocation[position] += additional_budget
+                amount -= additional_budget
+        return amount
+
+    def _reduce_budget(self, positions, amount, evenly=False):
+        if not positions:
+            return amount
+        if evenly:
+            per_position = round(amount / len(positions), 2)
+            for position in positions:
+                subtract_amount = min(per_position, self.strategy.budget_allocation[position] - 1)
+                self.strategy.budget_allocation[position] -= subtract_amount
+                amount -= subtract_amount
+        else:
+            total_allocation = sum(self.strategy.budget_allocation[pos] for pos in positions)
+            for position in positions:
+                subtract_amount = min(
+                    round((amount * self.strategy.budget_allocation[position]) / total_allocation, 2),
+                    self.strategy.budget_allocation[position] - 1
+                )
+                self.strategy.budget_allocation[position] -= subtract_amount
+                amount -= subtract_amount
+        return amount
