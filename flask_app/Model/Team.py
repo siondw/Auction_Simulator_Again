@@ -117,6 +117,8 @@ class Team:
         return self.roster
     
     def refactor_budget(self, cost, slot):
+        if self.is_human():
+            return
         if slot not in self.strategy.budget_allocation:
             return
 
