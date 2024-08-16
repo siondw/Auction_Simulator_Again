@@ -33,7 +33,7 @@ Rank,Player Name,Team,Position,Adjusted Value,Projected Points
 32,Justin Fields,PIT,QB,1,21.3
 1,Christian McCaffrey,SF,RB,59,354.1
 2,Bijan Robinson,ATL,RB,48,309.4
-3,Breece Hall,NYJ,RB,43,307.9
+3,Breece Hall,NYJ,RB,52,307.9
 4,Jahmyr Gibbs,DET,RB,40,257.7
 6,Jonathan Taylor,IND,RB,30,247.5
 5,Saquon Barkley,PHI,RB,35,260.3
@@ -42,7 +42,7 @@ Rank,Player Name,Team,Position,Adjusted Value,Projected Points
 9,Isiah Pacheco,KC,RB,27,241.7
 10,De'Von Achane,MIA,RB,26,243.9
 11,Rachaad White,TB,RB,24,242.8
-12,Derrick Henry,BAL,RB,22,258.8
+12,Derrick Henry,BAL,RB,25,258.8
 13,Alvin Kamara,NO,RB,21,246.2
 14,James Cook,BUF,RB,19,227.2
 15,Josh Jacobs,GB,RB,17,230
@@ -113,7 +113,7 @@ Rank,Player Name,Team,Position,Adjusted Value,Projected Points
 5,Justin Jefferson,MIN,WR,46,336.9
 6,A.J. Brown,PHI,WR,44,295.5
 7,Garrett Wilson,NYJ,WR,41,283.2
-8,Puka Nacua,LAR,WR,39,289.7
+8,Puka Nacua,LAR,WR,33,289.7
 9,Davante Adams,LV,WR,36,253.2
 10,Marvin Harrison Jr.,ARI,WR,34,276.8
 11,Chris Olave,NO,WR,32,266.4
@@ -126,23 +126,23 @@ Rank,Player Name,Team,Position,Adjusted Value,Projected Points
 18,DJ Moore,CHI,WR,20,238.2
 19,Cooper Kupp,LAR,WR,18,239.4
 20,DK Metcalf,SEA,WR,17,240.3
-21,Deebo Samuel Sr.,SF,WR,15,246.3
+21,Deebo Samuel Sr.,SF,WR,25,246.3
 22,DeVonta Smith,PHI,WR,14,249.7
 23,Stefon Diggs,HOU,WR,13,247.5
 24,Amari Cooper,CLE,WR,12,237.8
-25,Malik Nabers,NYG,WR,11,248.6
+25,Malik Nabers,NYG,WR,18,248.6
 26,Zay Flowers,BAL,WR,10,233.6
 27,Christian Kirk,JAC,WR,9,243
-28,Tee Higgins,CIN,WR,8,243.6
-29,Keenan Allen,CHI,WR,7,221.7
+28,Tee Higgins,CIN,WR,9,243.6
+29,Keenan Allen,CHI,WR,9,221.7
 30,George Pickens,PIT,WR,7,239.6
 31,Terry McLaurin,WAS,WR,6,230.3
 32,Tank Dell,HOU,WR,5,217.8
 33,Chris Godwin,TB,WR,5,237.8
 34,Diontae Johnson,CAR,WR,4,211.7
 35,Calvin Ridley,TEN,WR,4,204.7
-36,Rashee Rice,KC,WR,3,213.2
-37,Jayden Reed,GB,WR,3,236.9
+36,Rashee Rice,KC,WR,5,213.2
+37,Jayden Reed,GB,WR,5,236.9
 38,DeAndre Hopkins,TEN,WR,2,216
 39,Hollywood Brown,KC,WR,2,220.3
 40,Jaxon Smith-Njigba,SEA,WR,2,188.9

@@ -56,7 +56,7 @@ class RoundOfAuction:
             if not new_bid_made and self.isHumanInterested:
                 if self.highest_bidder == self.human_player:
                     break
-                time.sleep(4)  # Delay for 2 seconds (adjust as needed)
+                time.sleep(2)  # Delay for 2 seconds (adjust as needed)
                 print("im really trippin")
 
            

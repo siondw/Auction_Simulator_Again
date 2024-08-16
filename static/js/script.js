@@ -177,6 +177,10 @@ class SocketIOManager {
   startRound() {
     console.log("Session ID before starting round:", this.session_id);
     this.socket.emit("start_round", { session_id: this.session_id });
+    const startRoundButton = document.getElementById("startRound");
+    startRoundButton.disabled = true;
+    startRoundButton.classList.add("gray-button");
+
   }
 
   passBid() {

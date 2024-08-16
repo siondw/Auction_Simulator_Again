@@ -87,7 +87,7 @@ class League:
         # file_path = os.path.join(os.getcwd(), "flask_app/Resources/Players.csv")
 
         self.players = PlayerImporter.import_players_from_csv("flask_app/Resources/Players.csv")
-        self._dict = {player.name: player for player in self.players}
+        self.player_dict = {player.name: player for player in self.players}
 
 
     # def conduct_auction_round(self, player_nominated):
@@ -193,16 +193,21 @@ class League:
             available_players = [player for player in self.players if not player.drafted]
 
             # Filter and take top players based on position
-            top_qbs = sorted([player for player in available_players if player.pos == 'QB'], key=lambda x: x.positional_rank)[:20]
-            top_wrs = sorted([player for player in available_players if player.pos == 'WR'], key=lambda x: x.positional_rank)[:35]
-            top_rbs = sorted([player for player in available_players if player.pos == 'RB'], key=lambda x: x.positional_rank)[:25]
+            top_qbs = sorted([player for player in available_players if player.pos == 'QB'], key=lambda x: x.positional_rank)[:15]
+            top_wrs = sorted([player for player in available_players if player.pos == 'WR'], key=lambda x: x.positional_rank)[:25]
+            top_rbs = sorted([player for player in available_players if player.pos == 'RB'], key=lambda x: x.positional_rank)[:15]
             top_tes = sorted([player for player in available_players if player.pos == 'TE'], key=lambda x: x.positional_rank)[:5]
 
             # Combine all top players into a single list
             top_players = top_qbs + top_wrs + top_rbs + top_tes
 
+            # Sort the combined list by each player's positional rank in ascending order
+            sorted_top_players = sorted(top_players, key=lambda player: player.get_positional_rank())
+
             # Randomly select a player from the top players list
-            player_nominated = random.choice(top_players) 
+            weights = [1 / (i + 1)**0.5 for i in range(len(sorted_top_players))]
+
+            player_nominated = random.choices(sorted_top_players, weights=weights)[0]
 
         print(player_nominated)
         return player_nominated
