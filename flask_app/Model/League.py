@@ -48,7 +48,7 @@ class League:
             ZeroRBStrategy,
             HeroRBStrategy,
         ]
-        strategy_weights = [0.5, 0.1, 0.08, 0.085, 0.085, 0.15]
+        strategy_weights = [0.6, 0.05, 0.08, 0.085, 0.085, 0.1]
 
         # Field for the Human Team to make retrieval easier
         self.human_team = None

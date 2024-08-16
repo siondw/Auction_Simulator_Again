@@ -76,19 +76,28 @@ class Strategy(ABC):
             'TE': ['TE1', 'Flex', 'BN1', 'BN2', 'BN3', 'BN4', 'BN5', 'BN6'],
         }
 
-        # Set a tolerance for the expected value
         tolerance = 0.1  # 10% tolerance
 
         # Iterate through the slots in order for the player's position
         for slot in slot_order.get(position, []):
-            ev = self.budget_allocation.get(slot, 0)  # Get expected value or default to 0 if not found
-            if not roster.get(slot):  # Check if the slot is empty, assuming roster is a dictionary
-                if player_value >= (ev - ev * tolerance):
-                    print("Determined Slot: ", slot)
-                    return slot  # Return this slot if it matches the criteria
+            budget_allocation = self.budget_allocation.get(slot, 0)
+            
+            if budget_allocation <= 10:
+                threshold = budget_allocation - 1  # $1 tolerance for allocations of $10 or less
+            else:
+                threshold = budget_allocation - (budget_allocation * tolerance)
+            
+            threshold = max(0, round(threshold))  # Round to nearest dollar and ensure non-negative
+
+            if not roster.get(slot):  # Check if the slot is empty
+                if player_value >= threshold:
+                    print(f"Determined Slot: {slot} (Threshold: ${threshold}, Player Value: ${player_value})")
+                    return slot
 
         # If no slot is suitable, return None
         return None
+
+
 
 
     @abstractmethod
