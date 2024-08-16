@@ -1,5 +1,15 @@
 from .Strategies.HUMAN import HumanStrategy
 
+import logging
+
+# Set up basic configuration for logging
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# Create a function to log messages in red for critical issues
+def log_red(message):
+    logging.error(f'\033[91m{message}\033[0m')  # ANSI escape codes for red text
+
+
 class Team:
 
     def __init__(self, name, strategy=None):
@@ -206,21 +216,26 @@ class Team:
         return amount
 
     def _reduce_budget(self, positions, amount, evenly=False):
-        if not positions:
-            return amount
-        if evenly:
-            per_position = round(amount / len(positions), 2)
-            for position in positions:
-                subtract_amount = min(per_position, self.strategy.budget_allocation[position] - 1)
-                self.strategy.budget_allocation[position] -= subtract_amount
-                amount -= subtract_amount
-        else:
+        try:
+            if not positions:
+                return amount
             total_allocation = sum(self.strategy.budget_allocation[pos] for pos in positions)
-            for position in positions:
-                subtract_amount = min(
-                    round((amount * self.strategy.budget_allocation[position]) / total_allocation, 2),
-                    self.strategy.budget_allocation[position] - 1
-                )
-                self.strategy.budget_allocation[position] -= subtract_amount
-                amount -= subtract_amount
+            if total_allocation == 0:
+                logging.error(f"Unexpected zero total allocation for positions: {positions}")
+                return amount  # Optionally, handle this situation more gracefully
+            if evenly:
+                per_position = round(amount / len(positions), 2)
+                for position in positions:
+                    subtract_amount = min(per_position, self.strategy.budget_allocation[position] - 1)
+                    self.strategy.budget_allocation[position] -= subtract_amount
+                    amount -= subtract_amount
+            else:
+                for position in positions:
+                    proportion = (self.strategy.budget_allocation[position] / total_allocation)
+                    subtract_amount = min(round(amount * proportion, 2), self.strategy.budget_allocation[position] - 1)
+                    self.strategy.budget_allocation[position] -= subtract_amount
+                    amount -= subtract_amount
+        except Exception as e:
+            logging.error(f"Error in reducing budget: {e}")
+            raise  # Reraise the exception to handle it upstream if necessary
         return amount
